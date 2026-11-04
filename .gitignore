@@ -1,0 +1,46 @@
+# ── Secrets ───────────────────────────────────────────────────────────────────
+.env
+*.env
+sagemaker/.env
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# ── Alembic ───────────────────────────────────────────────────────────────────
+# Keep versions/ but ignore any local db files
+*.db
+*.sqlite
+
+# ── ML weights ────────────────────────────────────────────────────────────────
+*.pt
+*.pth
+*.onnx
+runs/
+training/data/
+backend/weights/*
+!backend/weights/.gitkeep
+
+# ── Uploads ───────────────────────────────────────────────────────────────────
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# ── Node ──────────────────────────────────────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/.vite/
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

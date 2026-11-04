@@ -1,0 +1,29 @@
+# API framework
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+python-multipart==0.0.9
+
+# ML / Vision — inference only (no PyTorch training deps)
+openai==1.30.1             # only needed when LLM_PROVIDER=openai
+ultralytics==8.2.18        # YOLOv8 inference (DAMAGE_DETECTOR=yolo, future)
+cardamage==0.1.3           # pretrained Mask R-CNN fallback damage detector
+huggingface-hub==2.4.0     # pulls the HF model weights (>=0.24 required by cardamage)
+Pillow==10.3.0
+
+# Database
+sqlalchemy==2.0.30
+alembic==1.13.1
+# psycopg v3 — SQLAlchemy 2.x's default driver for a bare postgresql:// URL.
+# (Replaces psycopg2-binary, which has no wheel for Python 3.14.)
+psycopg[binary]==3.3.6
+
+# AWS — Bedrock (Qwen) + S3
+boto3==1.34.110
+
+# Config / env
+pydantic-settings==2.2.1
+python-dotenv==1.0.1
+
+# Utilities
+aiofiles==23.2.1
+httpx==0.27.0

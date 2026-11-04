@@ -1,0 +1,19 @@
+# CarDD dataset — YOLOv8 format
+# This file is auto-updated by prepare_dataset.py
+# You can also edit the path manually to point to your processed data directory.
+
+path: ../data/processed   # relative to this config file
+
+train: images/train
+val:   images/val
+test:  images/test
+
+nc: 6    # number of damage classes
+
+names:
+  - dent
+  - scratch
+  - crack
+  - glass shatter
+  - lamp broken
+  - tire flat

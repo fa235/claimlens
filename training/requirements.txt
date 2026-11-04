@@ -1,0 +1,22 @@
+# YOLOv8 fine-tuning pipeline dependencies
+
+# Core ML
+ultralytics==8.2.18       # YOLOv8 — includes training, eval, export
+torch>=2.0.0              # PyTorch (CPU/MPS/CUDA)
+torchvision>=0.15.0
+
+# Dataset download
+datasets==2.19.1          # Hugging Face datasets
+huggingface-hub==0.23.2   # HF auth + download
+
+# Image processing
+Pillow==10.3.0
+opencv-python==4.9.0.80   # used by ultralytics visualisation
+
+# Utilities
+tqdm==4.66.4
+numpy>=1.24.0
+
+# Optional: ONNX export
+onnx==1.16.0
+onnxsim==0.4.36           # simplify ONNX graph (onnxsim)

@@ -1,0 +1,22 @@
+# Python virtualenv & caches
+venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local secrets — never bake into the image (secrets come from Secrets Manager)
+.env
+
+# Local dev artifacts not needed in the image
+test_images/
+uploads/
+weights/*
+!weights/.gitkeep
+_damage_debug.py
+_test_*.py
+test_e2e.py
+
+# Misc
+.DS_Store
+*.log

@@ -1,0 +1,57 @@
+{
+  "_comment": "Attach this policy to your SageMaker IAM role. See SETUP.md for step-by-step instructions.",
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "SageMakerFullAccess",
+      "Effect": "Allow",
+      "Action": [
+        "sagemaker:CreateTrainingJob",
+        "sagemaker:DescribeTrainingJob",
+        "sagemaker:StopTrainingJob",
+        "sagemaker:ListTrainingJobs",
+        "sagemaker:CreateModel",
+        "sagemaker:DescribeModel",
+        "sagemaker:DeleteModel"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "S3DataAccess",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:ListBucket",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": [
+        "arn:aws:s3:::YOUR-CLAIMLENS-BUCKET",
+        "arn:aws:s3:::YOUR-CLAIMLENS-BUCKET/*"
+      ]
+    },
+    {
+      "Sid": "ECRReadAccess",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:GetAuthorizationToken"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "CloudWatchLogs",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogStreams"
+      ],
+      "Resource": "arn:aws:logs:*:*:log-group:/aws/sagemaker/*"
+    }
+  ]
+}
