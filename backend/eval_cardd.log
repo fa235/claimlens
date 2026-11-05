@@ -1,0 +1,104 @@
+Provider: openai | vision model: gpt-4o
+Evaluating 25 images...
+
+[ 1/25] OK  000013.jpg  GT=['crack', 'glass shatter', 'tire flat']  PRED=['glass shatter', 'tire flat']  match=False
+[ 2/25] OK  000016.jpg  GT=['dent', 'scratch']  PRED=['scratch']  match=False
+[ 3/25] OK  000017.jpg  GT=['scratch']  PRED=['scratch']  match=True
+[ 4/25] OK  000024.jpg  GT=['scratch']  PRED=['scratch']  match=True
+[ 5/25] OK  000025.jpg  GT=['scratch']  PRED=['scratch']  match=True
+[ 6/25] OK  000034.jpg  GT=['crack', 'dent', 'lamp broken', 'scratch']  PRED=['dent', 'lamp broken']  match=False
+[ 7/25] OK  000035.jpg  GT=['crack', 'dent', 'lamp broken', 'scratch']  PRED=['dent', 'lamp broken']  match=False
+[ 8/25] OK  000038.jpg  GT=['dent', 'lamp broken']  PRED=['dent', 'lamp broken']  match=True
+[ 9/25] OK  000047.jpg  GT=['dent', 'lamp broken']  PRED=['dent', 'lamp broken']  match=True
+[10/25] OK  000054.jpg  GT=['lamp broken', 'scratch', 'tire flat']  PRED=['dent', 'scratch']  match=False
+[11/25] OK  000058.jpg  GT=['tire flat']  PRED=['tire flat']  match=True
+[12/25] OK  000059.jpg  GT=['tire flat']  PRED=['lamp broken']  match=False
+[13/25] OK  000060.jpg  GT=['tire flat']  PRED=['tire flat']  match=True
+[14/25] OK  000080.jpg  GT=['dent', 'lamp broken', 'tire flat']  PRED=['dent', 'tire flat']  match=False
+[15/25] OK  000083.jpg  GT=['lamp broken', 'scratch']  PRED=['dent', 'lamp broken', 'scratch']  match=False
+[16/25] OK  000084.jpg  GT=['crack']  PRED=['scratch']  match=False
+[17/25] OK  000086.jpg  GT=['crack', 'dent', 'scratch']  PRED=['dent', 'scratch']  match=False
+[18/25] OK  000089.jpg  GT=['crack']  PRED=['dent', 'scratch']  match=False
+[19/25] OK  000091.jpg  GT=['glass shatter']  PRED=['glass shatter']  match=True
+[20/25] OK  000097.jpg  GT=['scratch']  PRED=['lamp broken']  match=False
+[21/25] OK  000102.jpg  GT=['crack', 'lamp broken']  PRED=['lamp broken']  match=False
+[22/25] OK  000103.jpg  GT=['dent', 'glass shatter']  PRED=['dent', 'glass shatter']  match=True
+[23/25] OK  000105.jpg  GT=['scratch']  PRED=['dent', 'scratch']  match=False
+[24/25] OK  000107.jpg  GT=['scratch']  PRED=['scratch']  match=True
+[25/25] OK  000109.jpg  GT=['scratch']  PRED=['scratch']  match=True
+
+=== SUMMARY ===
+{
+  "num_images": 25,
+  "provider": "openai",
+  "vision_model": "gpt-4o",
+  "micro": {
+    "tp": 30,
+    "fp": 8,
+    "fn": 15,
+    "precision": 0.7894736842105263,
+    "recall": 0.6666666666666666,
+    "f1": 0.7228915662650601
+  },
+  "exact_set_match_rate": 0.44,
+  "any_damage_detection_rate": 1.0,
+  "per_category": {
+    "dent": {
+      "tp": 7,
+      "fp": 4,
+      "fn": 1,
+      "precision": 0.6363636363636364,
+      "recall": 0.875,
+      "f1": 0.7368421052631579,
+      "support": 8
+    },
+    "scratch": {
+      "tp": 10,
+      "fp": 2,
+      "fn": 3,
+      "precision": 0.8333333333333334,
+      "recall": 0.7692307692307693,
+      "f1": 0.8,
+      "support": 13
+    },
+    "crack": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 7,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 7
+    },
+    "glass shatter": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 3
+    },
+    "lamp broken": {
+      "tp": 6,
+      "fp": 2,
+      "fn": 2,
+      "precision": 0.75,
+      "recall": 0.75,
+      "f1": 0.75,
+      "support": 8
+    },
+    "tire flat": {
+      "tp": 4,
+      "fp": 0,
+      "fn": 2,
+      "precision": 1.0,
+      "recall": 0.6666666666666666,
+      "f1": 0.8,
+      "support": 6
+    }
+  }
+}
+
+Saved: /Users/apoorvakiran/Documents/02 software projects/ScaleAI/claimlens/backend/eval_cardd_results.json
+Saved: /Users/apoorvakiran/Documents/02 software projects/ScaleAI/claimlens/backend/eval_cardd_report.md

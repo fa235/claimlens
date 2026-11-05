@@ -1,0 +1,961 @@
+{
+  "note": "Claude = benchmark/reference. OpenAI compared against it. Measures model agreement, NOT accuracy vs real prices.",
+  "item_level": {
+    "num_items": 52,
+    "mae": 123.07692307692308,
+    "median_ae": 100.0,
+    "mape_pct": 22.7699927021194,
+    "median_ape_pct": 20.0,
+    "mean_signed_bias": -62.69230769230769,
+    "pearson_r": 0.8963587597971857,
+    "mean_claude": 542.5,
+    "mean_openai": 479.8076923076923,
+    "within_10pct": 0.21153846153846154,
+    "within_25pct": 0.5769230769230769
+  },
+  "claim_total_level": {
+    "num_claims": 25,
+    "total_mae": 218.4,
+    "total_mape_pct": 19.063664612892712,
+    "claude_grand_total": 28210,
+    "openai_grand_total": 24950
+  },
+  "per_type": [
+    {
+      "type": "scratch",
+      "n": 12,
+      "mean_claude": 341.6666666666667,
+      "mean_openai": 258.3333333333333,
+      "mae": 83.33333333333333
+    },
+    {
+      "type": "dent",
+      "n": 9,
+      "mean_claude": 638.8888888888889,
+      "mean_openai": 566.6666666666666,
+      "mae": 161.11111111111111
+    },
+    {
+      "type": "broken headlight",
+      "n": 6,
+      "mean_claude": 650,
+      "mean_openai": 458.3333333333333,
+      "mae": 191.66666666666666
+    },
+    {
+      "type": "bumper damage",
+      "n": 5,
+      "mean_claude": 700,
+      "mean_openai": 690,
+      "mae": 170
+    },
+    {
+      "type": "flat tire",
+      "n": 4,
+      "mean_claude": 250,
+      "mean_openai": 200,
+      "mae": 50
+    },
+    {
+      "type": "scuff",
+      "n": 2,
+      "mean_claude": 180,
+      "mean_openai": 175,
+      "mae": 25
+    },
+    {
+      "type": "shattered glass",
+      "n": 2,
+      "mean_claude": 450,
+      "mean_openai": 400,
+      "mae": 50
+    },
+    {
+      "type": "rust",
+      "n": 1,
+      "mean_claude": 800,
+      "mean_openai": 600,
+      "mae": 200
+    },
+    {
+      "type": "broken windshield",
+      "n": 1,
+      "mean_claude": 450,
+      "mean_openai": 400,
+      "mae": 50
+    },
+    {
+      "type": "paint transfer",
+      "n": 1,
+      "mean_claude": 200,
+      "mean_openai": 200,
+      "mae": 0
+    },
+    {
+      "type": "crumpled fender",
+      "n": 1,
+      "mean_claude": 1200,
+      "mean_openai": 1200,
+      "mae": 0
+    },
+    {
+      "type": "fender damage",
+      "n": 1,
+      "mean_claude": 1000,
+      "mean_openai": 1200,
+      "mae": 200
+    },
+    {
+      "type": "wheel damage",
+      "n": 1,
+      "mean_claude": 600,
+      "mean_openai": 700,
+      "mae": 100
+    },
+    {
+      "type": "crumpled bodywork",
+      "n": 1,
+      "mean_claude": 1500,
+      "mean_openai": 1500,
+      "mae": 0
+    },
+    {
+      "type": "broken taillight",
+      "n": 1,
+      "mean_claude": 450,
+      "mean_openai": 250,
+      "mae": 200
+    },
+    {
+      "type": "hole",
+      "n": 1,
+      "mean_claude": 900,
+      "mean_openai": 600,
+      "mae": 300
+    },
+    {
+      "type": "scratches",
+      "n": 1,
+      "mean_claude": 500,
+      "mean_openai": 400,
+      "mae": 100
+    },
+    {
+      "type": "missing part",
+      "n": 1,
+      "mean_claude": 800,
+      "mean_openai": 1200,
+      "mae": 400
+    },
+    {
+      "type": "paint peeling",
+      "n": 1,
+      "mean_claude": 300,
+      "mean_openai": 350,
+      "mae": 50
+    }
+  ],
+  "per_item": [
+    {
+      "file_name": "000013.jpg",
+      "index": 0,
+      "type": "rust",
+      "severity": "high",
+      "location": "front-left wheel arch",
+      "claude": 800,
+      "openai": 600,
+      "abs_error": 200,
+      "signed_error": -200,
+      "pct_error": -25.0
+    },
+    {
+      "file_name": "000013.jpg",
+      "index": 1,
+      "type": "flat tire",
+      "severity": "high",
+      "location": "front-left tire",
+      "claude": 250,
+      "openai": 200,
+      "abs_error": 50,
+      "signed_error": -50,
+      "pct_error": -20.0
+    },
+    {
+      "file_name": "000013.jpg",
+      "index": 2,
+      "type": "broken windshield",
+      "severity": "high",
+      "location": "windshield",
+      "claude": 450,
+      "openai": 400,
+      "abs_error": 50,
+      "signed_error": -50,
+      "pct_error": -11.11111111111111
+    },
+    {
+      "file_name": "000016.jpg",
+      "index": 0,
+      "type": "scratch",
+      "severity": "medium",
+      "location": "front-left bumper",
+      "claude": 350,
+      "openai": 250,
+      "abs_error": 100,
+      "signed_error": -100,
+      "pct_error": -28.57142857142857
+    },
+    {
+      "file_name": "000017.jpg",
+      "index": 0,
+      "type": "scratch",
+      "severity": "medium",
+      "location": "lower side panel",
+      "claude": 300,
+      "openai": 300,
+      "abs_error": 0,
+      "signed_error": 0,
+      "pct_error": 0.0
+    },
+    {
+      "file_name": "000024.jpg",
+      "index": 0,
+      "type": "scratch",
+      "severity": "medium",
+      "location": "front-right bumper",
+      "claude": 350,
+      "openai": 250,
+      "abs_error": 100,
+      "signed_error": -100,
+      "pct_error": -28.57142857142857
+    },
+    {
+      "file_name": "000024.jpg",
+      "index": 1,
+      "type": "paint transfer",
+      "severity": "medium",
+      "location": "front-right bumper",
+      "claude": 200,
+      "openai": 200,
+      "abs_error": 0,
+      "signed_error": 0,
+      "pct_error": 0.0
+    },
+    {
+      "file_name": "000025.jpg",
+      "index": 0,
+      "type": "scratch",
+      "severity": "medium",
+      "location": "front-right bumper",
+      "claude": 350,
+      "openai": 250,
+      "abs_error": 100,
+      "signed_error": -100,
+      "pct_error": -28.57142857142857
+    },
+    {
+      "file_name": "000025.jpg",
+      "index": 1,
+      "type": "scuff",
+      "severity": "medium",
+      "location": "front-right bumper",
+      "claude": 180,
+      "openai": 200,
+      "abs_error": 20,
+      "signed_error": 20,
+      "pct_error": 11.11111111111111
+    },
+    {
+      "file_name": "000034.jpg",
+      "index": 0,
+      "type": "crumpled fender",
+      "severity": "high",
+      "location": "front-left corner",
+      "claude": 1200,
+      "openai": 1200,
+      "abs_error": 0,
+      "signed_error": 0,
+      "pct_error": 0.0
+    },
+    {
+      "file_name": "000034.jpg",
+      "index": 1,
+      "type": "broken headlight",
+      "severity": "high",
+      "location": "front-left corner",
+      "claude": 650,
+      "openai": 400,
+      "abs_error": 250,
+      "signed_error": -250,
+      "pct_error": -38.46153846153847
+    },
+    {
+      "file_name": "000035.jpg",
+      "index": 0,
+      "type": "dent",
+      "severity": "high",
+      "location": "front-left fender",
+      "claude": 900,
+      "openai": 750,
+      "abs_error": 150,
+      "signed_error": -150,
+      "pct_error": -16.666666666666664
+    },
+    {
+      "file_name": "000035.jpg",
+      "index": 1,
+      "type": "broken headlight",
+      "severity": "high",
+      "location": "front-left",
+      "claude": 650,
+      "openai": 400,
+      "abs_error": 250,
+      "signed_error": -250,
+      "pct_error": -38.46153846153847
+    },
+    {
+      "file_name": "000038.jpg",
+      "index": 0,
+      "type": "dent",
+      "severity": "high",
+      "location": "front-right fender",
+      "claude": 900,
+      "openai": 750,
+      "abs_error": 150,
+      "signed_error": -150,
+      "pct_error": -16.666666666666664
+    },
+    {
+      "file_name": "000038.jpg",
+      "index": 1,
+      "type": "broken headlight",
+      "severity": "high",
+      "location": "front-right",
+      "claude": 650,
+      "openai": 600,
+      "abs_error": 50,
+      "signed_error": -50,
+      "pct_error": -7.6923076923076925
+    },
+    {
+      "file_name": "000038.jpg",
+      "index": 2,
+      "type": "bumper damage",
+      "severity": "high",
+      "location": "front-right bumper",
+      "claude": 850,
+      "openai": 900,
+      "abs_error": 50,
+      "signed_error": 50,
+      "pct_error": 5.88235294117647
+    },
+    {
+      "file_name": "000047.jpg",
+      "index": 0,
+      "type": "broken headlight",
+      "severity": "high",
+      "location": "front-right",
+      "claude": 650,
+      "openai": 450,
+      "abs_error": 200,
+      "signed_error": -200,
+      "pct_error": -30.76923076923077
+    },
+    {
+      "file_name": "000047.jpg",
+      "index": 1,
+      "type": "bumper damage",
+      "severity": "medium",
+      "location": "front-right",
+      "claude": 600,
+      "openai": 350,
+      "abs_error": 250,
+      "signed_error": -250,
+      "pct_error": -41.66666666666667
+    },
+    {
+      "file_name": "000047.jpg",
+      "index": 2,
+      "type": "dent",
+      "severity": "medium",
+      "location": "front-right fender",
+      "claude": 500,
+      "openai": 300,
+      "abs_error": 200,
+      "signed_error": -200,
+      "pct_error": -40.0
+    },
+    {
+      "file_name": "000054.jpg",
+      "index": 0,
+      "type": "dent",
+      "severity": "medium",
+      "location": "front-left bumper",
+      "claude": 500,
+      "openai": 450,
+      "abs_error": 50,
+      "signed_error": -50,
+      "pct_error": -10.0
+    },
+    {
+      "file_name": "000054.jpg",
+      "index": 1,
+      "type": "scratch",
+      "severity": "medium",
+      "location": "front-left bumper",
+      "claude": 350,
+      "openai": 150,
+      "abs_error": 200,
+      "signed_error": -200,
+      "pct_error": -57.14285714285714
+    },
+    {
+      "file_name": "000058.jpg",
+      "index": 0,
+      "type": "fender damage",
+      "severity": "high",
+      "location": "front-right fender",
+      "claude": 1000,
+      "openai": 1200,
+      "abs_error": 200,
+      "signed_error": 200,
+      "pct_error": 20.0
+    },
+    {
+      "file_name": "000058.jpg",
+      "index": 1,
+      "type": "flat tire",
+      "severity": "high",
+      "location": "front-right wheel",
+      "claude": 250,
+      "openai": 250,
+      "abs_error": 0,
+      "signed_error": 0,
+      "pct_error": 0.0
+    },
+    {
+      "file_name": "000059.jpg",
+      "index": 0,
+      "type": "bumper damage",
+      "severity": "high",
+      "location": "front-left bumper",
+      "claude": 850,
+      "openai": 1200,
+      "abs_error": 350,
+      "signed_error": 350,
+      "pct_error": 41.17647058823529
+    },
+    {
+      "file_name": "000059.jpg",
+      "index": 1,
+      "type": "wheel damage",
+      "severity": "high",
+      "location": "front-left wheel",
+      "claude": 600,
+      "openai": 700,
+      "abs_error": 100,
+      "signed_error": 100,
+      "pct_error": 16.666666666666664
+    },
+    {
+      "file_name": "000059.jpg",
+      "index": 2,
+      "type": "broken headlight",
+      "severity": "high",
+      "location": "front-left",
+      "claude": 650,
+      "openai": 450,
+      "abs_error": 200,
+      "signed_error": -200,
+      "pct_error": -30.76923076923077
+    },
+    {
+      "file_name": "000060.jpg",
+      "index": 0,
+      "type": "flat tire",
+      "severity": "high",
+      "location": "front-left tire",
+      "claude": 250,
+      "openai": 150,
+      "abs_error": 100,
+      "signed_error": -100,
+      "pct_error": -40.0
+    },
+    {
+      "file_name": "000060.jpg",
+      "index": 1,
+      "type": "bumper damage",
+      "severity": "medium",
+      "location": "front-left bumper",
+      "claude": 600,
+      "openai": 400,
+      "abs_error": 200,
+      "signed_error": -200,
+      "pct_error": -33.33333333333333
+    },
+    {
+      "file_name": "000080.jpg",
+      "index": 0,
+      "type": "crumpled bodywork",
+      "severity": "high",
+      "location": "rear-left side",
+      "claude": 1500,
+      "openai": 1500,
+      "abs_error": 0,
+      "signed_error": 0,
+      "pct_error": 0.0
+    },
+    {
+      "file_name": "000080.jpg",
+      "index": 1,
+      "type": "flat tire",
+      "severity": "high",
+      "location": "rear-left wheel",
+      "claude": 250,
+      "openai": 200,
+      "abs_error": 50,
+      "signed_error": -50,
+      "pct_error": -20.0
+    },
+    {
+      "file_name": "000083.jpg",
+      "index": 0,
+      "type": "scratch",
+      "severity": "medium",
+      "location": "rear bumper",
+      "claude": 350,
+      "openai": 300,
+      "abs_error": 50,
+      "signed_error": -50,
+      "pct_error": -14.285714285714285
+    },
+    {
+      "file_name": "000083.jpg",
+      "index": 1,
+      "type": "dent",
+      "severity": "medium",
+      "location": "rear bumper",
+      "claude": 500,
+      "openai": 450,
+      "abs_error": 50,
+      "signed_error": -50,
+      "pct_error": -10.0
+    },
+    {
+      "file_name": "000083.jpg",
+      "index": 2,
+      "type": "broken taillight",
+      "severity": "high",
+      "location": "rear",
+      "claude": 450,
+      "openai": 250,
+      "abs_error": 200,
+      "signed_error": -200,
+      "pct_error": -44.44444444444444
+    },
+    {
+      "file_name": "000084.jpg",
+      "index": 0,
+      "type": "hole",
+      "severity": "high",
+      "location": "rear bumper",
+      "claude": 900,
+      "openai": 600,
+      "abs_error": 300,
+      "signed_error": -300,
+      "pct_error": -33.33333333333333
+    },
+    {
+      "file_name": "000084.jpg",
+      "index": 1,
+      "type": "scratch",
+      "severity": "medium",
+      "location": "rear bumper",
+      "claude": 350,
+      "openai": 250,
+      "abs_error": 100,
+      "signed_error": -100,
+      "pct_error": -28.57142857142857
+    },
+    {
+      "file_name": "000086.jpg",
+      "index": 0,
+      "type": "dent",
+      "severity": "high",
+      "location": "rear-right side",
+      "claude": 900,
+      "openai": 1200,
+      "abs_error": 300,
+      "signed_error": 300,
+      "pct_error": 33.33333333333333
+    },
+    {
+      "file_name": "000086.jpg",
+      "index": 1,
+      "type": "scratch",
+      "severity": "medium",
+      "location": "rear-right side",
+      "claude": 350,
+      "openai": 300,
+      "abs_error": 50,
+      "signed_error": -50,
+      "pct_error": -14.285714285714285
+    },
+    {
+      "file_name": "000089.jpg",
+      "index": 0,
+      "type": "scratches",
+      "severity": "high",
+      "location": "rear bumper",
+      "claude": 500,
+      "openai": 400,
+      "abs_error": 100,
+      "signed_error": -100,
+      "pct_error": -20.0
+    },
+    {
+      "file_name": "000089.jpg",
+      "index": 1,
+      "type": "dent",
+      "severity": "medium",
+      "location": "rear bumper",
+      "claude": 500,
+      "openai": 600,
+      "abs_error": 100,
+      "signed_error": 100,
+      "pct_error": 20.0
+    },
+    {
+      "file_name": "000089.jpg",
+      "index": 2,
+      "type": "missing part",
+      "severity": "high",
+      "location": "rear bumper",
+      "claude": 800,
+      "openai": 1200,
+      "abs_error": 400,
+      "signed_error": 400,
+      "pct_error": 50.0
+    },
+    {
+      "file_name": "000091.jpg",
+      "index": 0,
+      "type": "shattered glass",
+      "severity": "high",
+      "location": "windshield",
+      "claude": 450,
+      "openai": 400,
+      "abs_error": 50,
+      "signed_error": -50,
+      "pct_error": -11.11111111111111
+    },
+    {
+      "file_name": "000097.jpg",
+      "index": 0,
+      "type": "scratch",
+      "severity": "medium",
+      "location": "front bumper near indicator light",
+      "claude": 350,
+      "openai": 300,
+      "abs_error": 50,
+      "signed_error": -50,
+      "pct_error": -14.285714285714285
+    },
+    {
+      "file_name": "000097.jpg",
+      "index": 1,
+      "type": "scuff",
+      "severity": "medium",
+      "location": "front bumper near indicator light",
+      "claude": 180,
+      "openai": 150,
+      "abs_error": 30,
+      "signed_error": -30,
+      "pct_error": -16.666666666666664
+    },
+    {
+      "file_name": "000102.jpg",
+      "index": 0,
+      "type": "broken headlight",
+      "severity": "high",
+      "location": "front-right",
+      "claude": 650,
+      "openai": 450,
+      "abs_error": 200,
+      "signed_error": -200,
+      "pct_error": -30.76923076923077
+    },
+    {
+      "file_name": "000102.jpg",
+      "index": 1,
+      "type": "bumper damage",
+      "severity": "medium",
+      "location": "front-right",
+      "claude": 600,
+      "openai": 600,
+      "abs_error": 0,
+      "signed_error": 0,
+      "pct_error": 0.0
+    },
+    {
+      "file_name": "000103.jpg",
+      "index": 0,
+      "type": "shattered glass",
+      "severity": "high",
+      "location": "windshield",
+      "claude": 450,
+      "openai": 400,
+      "abs_error": 50,
+      "signed_error": -50,
+      "pct_error": -11.11111111111111
+    },
+    {
+      "file_name": "000103.jpg",
+      "index": 1,
+      "type": "dent",
+      "severity": "medium",
+      "location": "hood",
+      "claude": 550,
+      "openai": 300,
+      "abs_error": 250,
+      "signed_error": -250,
+      "pct_error": -45.45454545454545
+    },
+    {
+      "file_name": "000105.jpg",
+      "index": 0,
+      "type": "scratch",
+      "severity": "medium",
+      "location": "rear door",
+      "claude": 350,
+      "openai": 150,
+      "abs_error": 200,
+      "signed_error": -200,
+      "pct_error": -57.14285714285714
+    },
+    {
+      "file_name": "000105.jpg",
+      "index": 1,
+      "type": "dent",
+      "severity": "medium",
+      "location": "rear door",
+      "claude": 500,
+      "openai": 300,
+      "abs_error": 200,
+      "signed_error": -200,
+      "pct_error": -40.0
+    },
+    {
+      "file_name": "000107.jpg",
+      "index": 0,
+      "type": "scratch",
+      "severity": "medium",
+      "location": "rear wheel arch",
+      "claude": 350,
+      "openai": 300,
+      "abs_error": 50,
+      "signed_error": -50,
+      "pct_error": -14.285714285714285
+    },
+    {
+      "file_name": "000107.jpg",
+      "index": 1,
+      "type": "paint peeling",
+      "severity": "medium",
+      "location": "rear wheel arch",
+      "claude": 300,
+      "openai": 350,
+      "abs_error": 50,
+      "signed_error": 50,
+      "pct_error": 16.666666666666664
+    },
+    {
+      "file_name": "000109.jpg",
+      "index": 0,
+      "type": "scratch",
+      "severity": "medium",
+      "location": "lower side panel",
+      "claude": 300,
+      "openai": 300,
+      "abs_error": 0,
+      "signed_error": 0,
+      "pct_error": 0.0
+    }
+  ],
+  "claim_totals": [
+    {
+      "file_name": "000013.jpg",
+      "claude_total": 1500,
+      "openai_total": 1200,
+      "abs_error": 300,
+      "pct_error": -20.0
+    },
+    {
+      "file_name": "000016.jpg",
+      "claude_total": 350,
+      "openai_total": 250,
+      "abs_error": 100,
+      "pct_error": -28.57142857142857
+    },
+    {
+      "file_name": "000017.jpg",
+      "claude_total": 300,
+      "openai_total": 300,
+      "abs_error": 0,
+      "pct_error": 0.0
+    },
+    {
+      "file_name": "000024.jpg",
+      "claude_total": 550,
+      "openai_total": 450,
+      "abs_error": 100,
+      "pct_error": -18.181818181818183
+    },
+    {
+      "file_name": "000025.jpg",
+      "claude_total": 530,
+      "openai_total": 450,
+      "abs_error": 80,
+      "pct_error": -15.09433962264151
+    },
+    {
+      "file_name": "000034.jpg",
+      "claude_total": 1850,
+      "openai_total": 1600,
+      "abs_error": 250,
+      "pct_error": -13.513513513513514
+    },
+    {
+      "file_name": "000035.jpg",
+      "claude_total": 1550,
+      "openai_total": 1150,
+      "abs_error": 400,
+      "pct_error": -25.806451612903224
+    },
+    {
+      "file_name": "000038.jpg",
+      "claude_total": 2400,
+      "openai_total": 2250,
+      "abs_error": 150,
+      "pct_error": -6.25
+    },
+    {
+      "file_name": "000047.jpg",
+      "claude_total": 1750,
+      "openai_total": 1100,
+      "abs_error": 650,
+      "pct_error": -37.142857142857146
+    },
+    {
+      "file_name": "000054.jpg",
+      "claude_total": 850,
+      "openai_total": 600,
+      "abs_error": 250,
+      "pct_error": -29.411764705882355
+    },
+    {
+      "file_name": "000058.jpg",
+      "claude_total": 1250,
+      "openai_total": 1450,
+      "abs_error": 200,
+      "pct_error": 16.0
+    },
+    {
+      "file_name": "000059.jpg",
+      "claude_total": 2100,
+      "openai_total": 2350,
+      "abs_error": 250,
+      "pct_error": 11.904761904761903
+    },
+    {
+      "file_name": "000060.jpg",
+      "claude_total": 850,
+      "openai_total": 550,
+      "abs_error": 300,
+      "pct_error": -35.294117647058826
+    },
+    {
+      "file_name": "000080.jpg",
+      "claude_total": 1750,
+      "openai_total": 1700,
+      "abs_error": 50,
+      "pct_error": -2.857142857142857
+    },
+    {
+      "file_name": "000083.jpg",
+      "claude_total": 1300,
+      "openai_total": 1000,
+      "abs_error": 300,
+      "pct_error": -23.076923076923077
+    },
+    {
+      "file_name": "000084.jpg",
+      "claude_total": 1250,
+      "openai_total": 850,
+      "abs_error": 400,
+      "pct_error": -32.0
+    },
+    {
+      "file_name": "000086.jpg",
+      "claude_total": 1250,
+      "openai_total": 1500,
+      "abs_error": 250,
+      "pct_error": 20.0
+    },
+    {
+      "file_name": "000089.jpg",
+      "claude_total": 1800,
+      "openai_total": 2200,
+      "abs_error": 400,
+      "pct_error": 22.22222222222222
+    },
+    {
+      "file_name": "000091.jpg",
+      "claude_total": 450,
+      "openai_total": 400,
+      "abs_error": 50,
+      "pct_error": -11.11111111111111
+    },
+    {
+      "file_name": "000097.jpg",
+      "claude_total": 530,
+      "openai_total": 450,
+      "abs_error": 80,
+      "pct_error": -15.09433962264151
+    },
+    {
+      "file_name": "000102.jpg",
+      "claude_total": 1250,
+      "openai_total": 1050,
+      "abs_error": 200,
+      "pct_error": -16.0
+    },
+    {
+      "file_name": "000103.jpg",
+      "claude_total": 1000,
+      "openai_total": 700,
+      "abs_error": 300,
+      "pct_error": -30.0
+    },
+    {
+      "file_name": "000105.jpg",
+      "claude_total": 850,
+      "openai_total": 450,
+      "abs_error": 400,
+      "pct_error": -47.05882352941176
+    },
+    {
+      "file_name": "000107.jpg",
+      "claude_total": 650,
+      "openai_total": 650,
+      "abs_error": 0,
+      "pct_error": 0.0
+    },
+    {
+      "file_name": "000109.jpg",
+      "claude_total": 300,
+      "openai_total": 300,
+      "abs_error": 0,
+      "pct_error": 0.0
+    }
+  ]
+}

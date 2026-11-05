@@ -1,0 +1,518 @@
+{
+  "per_image": [
+    {
+      "file_name": "000013.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "rust",
+          "severity": "high",
+          "location": "front-left wheel arch",
+          "cost": 600
+        },
+        {
+          "index": 1,
+          "type": "flat tire",
+          "severity": "high",
+          "location": "front-left tire",
+          "cost": 200
+        },
+        {
+          "index": 2,
+          "type": "broken windshield",
+          "severity": "high",
+          "location": "windshield",
+          "cost": 400
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000016.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "scratch",
+          "severity": "medium",
+          "location": "front-left bumper",
+          "cost": 250
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000017.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "scratch",
+          "severity": "medium",
+          "location": "lower side panel",
+          "cost": 300
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000024.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "scratch",
+          "severity": "medium",
+          "location": "front-right bumper",
+          "cost": 250
+        },
+        {
+          "index": 1,
+          "type": "paint transfer",
+          "severity": "medium",
+          "location": "front-right bumper",
+          "cost": 200
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000025.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "scratch",
+          "severity": "medium",
+          "location": "front-right bumper",
+          "cost": 250
+        },
+        {
+          "index": 1,
+          "type": "scuff",
+          "severity": "medium",
+          "location": "front-right bumper",
+          "cost": 200
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000034.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "crumpled fender",
+          "severity": "high",
+          "location": "front-left corner",
+          "cost": 1200
+        },
+        {
+          "index": 1,
+          "type": "broken headlight",
+          "severity": "high",
+          "location": "front-left corner",
+          "cost": 400
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000035.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "dent",
+          "severity": "high",
+          "location": "front-left fender",
+          "cost": 750
+        },
+        {
+          "index": 1,
+          "type": "broken headlight",
+          "severity": "high",
+          "location": "front-left",
+          "cost": 400
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000038.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "dent",
+          "severity": "high",
+          "location": "front-right fender",
+          "cost": 750
+        },
+        {
+          "index": 1,
+          "type": "broken headlight",
+          "severity": "high",
+          "location": "front-right",
+          "cost": 600
+        },
+        {
+          "index": 2,
+          "type": "bumper damage",
+          "severity": "high",
+          "location": "front-right bumper",
+          "cost": 900
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000047.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "broken headlight",
+          "severity": "high",
+          "location": "front-right",
+          "cost": 450
+        },
+        {
+          "index": 1,
+          "type": "bumper damage",
+          "severity": "medium",
+          "location": "front-right",
+          "cost": 350
+        },
+        {
+          "index": 2,
+          "type": "dent",
+          "severity": "medium",
+          "location": "front-right fender",
+          "cost": 300
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000054.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "dent",
+          "severity": "medium",
+          "location": "front-left bumper",
+          "cost": 450
+        },
+        {
+          "index": 1,
+          "type": "scratch",
+          "severity": "medium",
+          "location": "front-left bumper",
+          "cost": 150
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000058.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "fender damage",
+          "severity": "high",
+          "location": "front-right fender",
+          "cost": 1200
+        },
+        {
+          "index": 1,
+          "type": "flat tire",
+          "severity": "high",
+          "location": "front-right wheel",
+          "cost": 250
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000059.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "bumper damage",
+          "severity": "high",
+          "location": "front-left bumper",
+          "cost": 1200
+        },
+        {
+          "index": 1,
+          "type": "wheel damage",
+          "severity": "high",
+          "location": "front-left wheel",
+          "cost": 700
+        },
+        {
+          "index": 2,
+          "type": "broken headlight",
+          "severity": "high",
+          "location": "front-left",
+          "cost": 450
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000060.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "flat tire",
+          "severity": "high",
+          "location": "front-left tire",
+          "cost": 150
+        },
+        {
+          "index": 1,
+          "type": "bumper damage",
+          "severity": "medium",
+          "location": "front-left bumper",
+          "cost": 400
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000080.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "crumpled bodywork",
+          "severity": "high",
+          "location": "rear-left side",
+          "cost": 1500
+        },
+        {
+          "index": 1,
+          "type": "flat tire",
+          "severity": "high",
+          "location": "rear-left wheel",
+          "cost": 200
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000083.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "scratch",
+          "severity": "medium",
+          "location": "rear bumper",
+          "cost": 300
+        },
+        {
+          "index": 1,
+          "type": "dent",
+          "severity": "medium",
+          "location": "rear bumper",
+          "cost": 450
+        },
+        {
+          "index": 2,
+          "type": "broken taillight",
+          "severity": "high",
+          "location": "rear",
+          "cost": 250
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000084.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "hole",
+          "severity": "high",
+          "location": "rear bumper",
+          "cost": 600
+        },
+        {
+          "index": 1,
+          "type": "scratch",
+          "severity": "medium",
+          "location": "rear bumper",
+          "cost": 250
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000086.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "dent",
+          "severity": "high",
+          "location": "rear-right side",
+          "cost": 1200
+        },
+        {
+          "index": 1,
+          "type": "scratch",
+          "severity": "medium",
+          "location": "rear-right side",
+          "cost": 300
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000089.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "scratches",
+          "severity": "high",
+          "location": "rear bumper",
+          "cost": 400
+        },
+        {
+          "index": 1,
+          "type": "dent",
+          "severity": "medium",
+          "location": "rear bumper",
+          "cost": 600
+        },
+        {
+          "index": 2,
+          "type": "missing part",
+          "severity": "high",
+          "location": "rear bumper",
+          "cost": 1200
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000091.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "shattered glass",
+          "severity": "high",
+          "location": "windshield",
+          "cost": 400
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000097.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "scratch",
+          "severity": "medium",
+          "location": "front bumper near indicator light",
+          "cost": 300
+        },
+        {
+          "index": 1,
+          "type": "scuff",
+          "severity": "medium",
+          "location": "front bumper near indicator light",
+          "cost": 150
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000102.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "broken headlight",
+          "severity": "high",
+          "location": "front-right",
+          "cost": 450
+        },
+        {
+          "index": 1,
+          "type": "bumper damage",
+          "severity": "medium",
+          "location": "front-right",
+          "cost": 600
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000103.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "shattered glass",
+          "severity": "high",
+          "location": "windshield",
+          "cost": 400
+        },
+        {
+          "index": 1,
+          "type": "dent",
+          "severity": "medium",
+          "location": "hood",
+          "cost": 300
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000105.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "scratch",
+          "severity": "medium",
+          "location": "rear door",
+          "cost": 150
+        },
+        {
+          "index": 1,
+          "type": "dent",
+          "severity": "medium",
+          "location": "rear door",
+          "cost": 300
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000107.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "scratch",
+          "severity": "medium",
+          "location": "rear wheel arch",
+          "cost": 300
+        },
+        {
+          "index": 1,
+          "type": "paint peeling",
+          "severity": "medium",
+          "location": "rear wheel arch",
+          "cost": 350
+        }
+      ],
+      "error": null
+    },
+    {
+      "file_name": "000109.jpg",
+      "items": [
+        {
+          "index": 0,
+          "type": "scratch",
+          "severity": "medium",
+          "location": "lower side panel",
+          "cost": 300
+        }
+      ],
+      "error": null
+    }
+  ]
+}

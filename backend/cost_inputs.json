@@ -1,0 +1,437 @@
+[
+  {
+    "file_name": "000013.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "rust",
+        "severity": "high",
+        "location": "front-left wheel arch"
+      },
+      {
+        "type": "flat tire",
+        "severity": "high",
+        "location": "front-left tire"
+      },
+      {
+        "type": "broken windshield",
+        "severity": "high",
+        "location": "windshield"
+      }
+    ]
+  },
+  {
+    "file_name": "000016.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "scratch",
+        "severity": "medium",
+        "location": "front-left bumper"
+      }
+    ]
+  },
+  {
+    "file_name": "000017.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "scratch",
+        "severity": "medium",
+        "location": "lower side panel"
+      }
+    ]
+  },
+  {
+    "file_name": "000024.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "scratch",
+        "severity": "medium",
+        "location": "front-right bumper"
+      },
+      {
+        "type": "paint transfer",
+        "severity": "medium",
+        "location": "front-right bumper"
+      }
+    ]
+  },
+  {
+    "file_name": "000025.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "scratch",
+        "severity": "medium",
+        "location": "front-right bumper"
+      },
+      {
+        "type": "scuff",
+        "severity": "medium",
+        "location": "front-right bumper"
+      }
+    ]
+  },
+  {
+    "file_name": "000034.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "crumpled fender",
+        "severity": "high",
+        "location": "front-left corner"
+      },
+      {
+        "type": "broken headlight",
+        "severity": "high",
+        "location": "front-left corner"
+      }
+    ]
+  },
+  {
+    "file_name": "000035.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "dent",
+        "severity": "high",
+        "location": "front-left fender"
+      },
+      {
+        "type": "broken headlight",
+        "severity": "high",
+        "location": "front-left"
+      }
+    ]
+  },
+  {
+    "file_name": "000038.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "dent",
+        "severity": "high",
+        "location": "front-right fender"
+      },
+      {
+        "type": "broken headlight",
+        "severity": "high",
+        "location": "front-right"
+      },
+      {
+        "type": "bumper damage",
+        "severity": "high",
+        "location": "front-right bumper"
+      }
+    ]
+  },
+  {
+    "file_name": "000047.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "broken headlight",
+        "severity": "high",
+        "location": "front-right"
+      },
+      {
+        "type": "bumper damage",
+        "severity": "medium",
+        "location": "front-right"
+      },
+      {
+        "type": "dent",
+        "severity": "medium",
+        "location": "front-right fender"
+      }
+    ]
+  },
+  {
+    "file_name": "000054.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "dent",
+        "severity": "medium",
+        "location": "front-left bumper"
+      },
+      {
+        "type": "scratch",
+        "severity": "medium",
+        "location": "front-left bumper"
+      }
+    ]
+  },
+  {
+    "file_name": "000058.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "fender damage",
+        "severity": "high",
+        "location": "front-right fender"
+      },
+      {
+        "type": "flat tire",
+        "severity": "high",
+        "location": "front-right wheel"
+      }
+    ]
+  },
+  {
+    "file_name": "000059.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "bumper damage",
+        "severity": "high",
+        "location": "front-left bumper"
+      },
+      {
+        "type": "wheel damage",
+        "severity": "high",
+        "location": "front-left wheel"
+      },
+      {
+        "type": "broken headlight",
+        "severity": "high",
+        "location": "front-left"
+      }
+    ]
+  },
+  {
+    "file_name": "000060.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "flat tire",
+        "severity": "high",
+        "location": "front-left tire"
+      },
+      {
+        "type": "bumper damage",
+        "severity": "medium",
+        "location": "front-left bumper"
+      }
+    ]
+  },
+  {
+    "file_name": "000080.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "crumpled bodywork",
+        "severity": "high",
+        "location": "rear-left side"
+      },
+      {
+        "type": "flat tire",
+        "severity": "high",
+        "location": "rear-left wheel"
+      }
+    ]
+  },
+  {
+    "file_name": "000083.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "scratch",
+        "severity": "medium",
+        "location": "rear bumper"
+      },
+      {
+        "type": "dent",
+        "severity": "medium",
+        "location": "rear bumper"
+      },
+      {
+        "type": "broken taillight",
+        "severity": "high",
+        "location": "rear"
+      }
+    ]
+  },
+  {
+    "file_name": "000084.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "hole",
+        "severity": "high",
+        "location": "rear bumper"
+      },
+      {
+        "type": "scratch",
+        "severity": "medium",
+        "location": "rear bumper"
+      }
+    ]
+  },
+  {
+    "file_name": "000086.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "dent",
+        "severity": "high",
+        "location": "rear-right side"
+      },
+      {
+        "type": "scratch",
+        "severity": "medium",
+        "location": "rear-right side"
+      }
+    ]
+  },
+  {
+    "file_name": "000089.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "scratches",
+        "severity": "high",
+        "location": "rear bumper"
+      },
+      {
+        "type": "dent",
+        "severity": "medium",
+        "location": "rear bumper"
+      },
+      {
+        "type": "missing part",
+        "severity": "high",
+        "location": "rear bumper"
+      }
+    ]
+  },
+  {
+    "file_name": "000091.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "shattered glass",
+        "severity": "high",
+        "location": "windshield"
+      }
+    ]
+  },
+  {
+    "file_name": "000097.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "scratch",
+        "severity": "medium",
+        "location": "front bumper near indicator light"
+      },
+      {
+        "type": "scuff",
+        "severity": "medium",
+        "location": "front bumper near indicator light"
+      }
+    ]
+  },
+  {
+    "file_name": "000102.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "broken headlight",
+        "severity": "high",
+        "location": "front-right"
+      },
+      {
+        "type": "bumper damage",
+        "severity": "medium",
+        "location": "front-right"
+      }
+    ]
+  },
+  {
+    "file_name": "000103.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "shattered glass",
+        "severity": "high",
+        "location": "windshield"
+      },
+      {
+        "type": "dent",
+        "severity": "medium",
+        "location": "hood"
+      }
+    ]
+  },
+  {
+    "file_name": "000105.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "scratch",
+        "severity": "medium",
+        "location": "rear door"
+      },
+      {
+        "type": "dent",
+        "severity": "medium",
+        "location": "rear door"
+      }
+    ]
+  },
+  {
+    "file_name": "000107.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "scratch",
+        "severity": "medium",
+        "location": "rear wheel arch"
+      },
+      {
+        "type": "paint peeling",
+        "severity": "medium",
+        "location": "rear wheel arch"
+      }
+    ]
+  },
+  {
+    "file_name": "000109.jpg",
+    "car_color": "Unknown",
+    "car_model": "Unknown",
+    "damages": [
+      {
+        "type": "scratch",
+        "severity": "medium",
+        "location": "lower side panel"
+      }
+    ]
+  }
+]

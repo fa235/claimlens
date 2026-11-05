@@ -1,0 +1,222 @@
+[
+  {
+    "image_id": 13,
+    "file_name": "000013.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000013.jpg",
+    "gt_categories": [
+      "crack",
+      "glass shatter",
+      "tire flat"
+    ]
+  },
+  {
+    "image_id": 16,
+    "file_name": "000016.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000016.jpg",
+    "gt_categories": [
+      "dent",
+      "scratch"
+    ]
+  },
+  {
+    "image_id": 17,
+    "file_name": "000017.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000017.jpg",
+    "gt_categories": [
+      "scratch"
+    ]
+  },
+  {
+    "image_id": 24,
+    "file_name": "000024.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000024.jpg",
+    "gt_categories": [
+      "scratch"
+    ]
+  },
+  {
+    "image_id": 25,
+    "file_name": "000025.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000025.jpg",
+    "gt_categories": [
+      "scratch"
+    ]
+  },
+  {
+    "image_id": 34,
+    "file_name": "000034.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000034.jpg",
+    "gt_categories": [
+      "crack",
+      "dent",
+      "lamp broken",
+      "scratch"
+    ]
+  },
+  {
+    "image_id": 35,
+    "file_name": "000035.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000035.jpg",
+    "gt_categories": [
+      "crack",
+      "dent",
+      "lamp broken",
+      "scratch"
+    ]
+  },
+  {
+    "image_id": 38,
+    "file_name": "000038.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000038.jpg",
+    "gt_categories": [
+      "dent",
+      "lamp broken"
+    ]
+  },
+  {
+    "image_id": 47,
+    "file_name": "000047.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000047.jpg",
+    "gt_categories": [
+      "dent",
+      "lamp broken"
+    ]
+  },
+  {
+    "image_id": 54,
+    "file_name": "000054.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000054.jpg",
+    "gt_categories": [
+      "lamp broken",
+      "scratch",
+      "tire flat"
+    ]
+  },
+  {
+    "image_id": 58,
+    "file_name": "000058.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000058.jpg",
+    "gt_categories": [
+      "tire flat"
+    ]
+  },
+  {
+    "image_id": 59,
+    "file_name": "000059.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000059.jpg",
+    "gt_categories": [
+      "tire flat"
+    ]
+  },
+  {
+    "image_id": 60,
+    "file_name": "000060.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000060.jpg",
+    "gt_categories": [
+      "tire flat"
+    ]
+  },
+  {
+    "image_id": 80,
+    "file_name": "000080.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000080.jpg",
+    "gt_categories": [
+      "dent",
+      "lamp broken",
+      "tire flat"
+    ]
+  },
+  {
+    "image_id": 83,
+    "file_name": "000083.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000083.jpg",
+    "gt_categories": [
+      "lamp broken",
+      "scratch"
+    ]
+  },
+  {
+    "image_id": 84,
+    "file_name": "000084.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000084.jpg",
+    "gt_categories": [
+      "crack"
+    ]
+  },
+  {
+    "image_id": 86,
+    "file_name": "000086.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000086.jpg",
+    "gt_categories": [
+      "crack",
+      "dent",
+      "scratch"
+    ]
+  },
+  {
+    "image_id": 89,
+    "file_name": "000089.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000089.jpg",
+    "gt_categories": [
+      "crack"
+    ]
+  },
+  {
+    "image_id": 91,
+    "file_name": "000091.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000091.jpg",
+    "gt_categories": [
+      "glass shatter"
+    ]
+  },
+  {
+    "image_id": 97,
+    "file_name": "000097.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000097.jpg",
+    "gt_categories": [
+      "scratch"
+    ]
+  },
+  {
+    "image_id": 102,
+    "file_name": "000102.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000102.jpg",
+    "gt_categories": [
+      "crack",
+      "lamp broken"
+    ]
+  },
+  {
+    "image_id": 103,
+    "file_name": "000103.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000103.jpg",
+    "gt_categories": [
+      "dent",
+      "glass shatter"
+    ]
+  },
+  {
+    "image_id": 105,
+    "file_name": "000105.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000105.jpg",
+    "gt_categories": [
+      "scratch"
+    ]
+  },
+  {
+    "image_id": 107,
+    "file_name": "000107.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000107.jpg",
+    "gt_categories": [
+      "scratch"
+    ]
+  },
+  {
+    "image_id": 109,
+    "file_name": "000109.jpg",
+    "path": "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017/000109.jpg",
+    "gt_categories": [
+      "scratch"
+    ]
+  }
+]

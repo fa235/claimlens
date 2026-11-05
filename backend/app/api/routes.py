@@ -17,9 +17,12 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.models.database import get_db
 from app.models.claim import Claim
 from app.services.analyzer import analyze_image
+from app.services.vision import identify_vehicle
+from app.services.cost_estimator import estimate_cost
 from app.services.storage import storage
 
 
@@ -43,6 +46,13 @@ class DecisionBody(BaseModel):
     """Approve/reject metadata."""
     processed_by: Optional[str] = None
     reason: Optional[str] = None
+
+
+class EstimateBody(BaseModel):
+    """Input for the standalone per-item cost estimate step."""
+    car_color: Optional[str] = "Unknown"
+    car_model: Optional[str] = "Unknown"
+    damages: list = []
 
 router = APIRouter(prefix="/api")
 
@@ -131,7 +141,66 @@ async def analyze(
     db.commit()
     db.refresh(claim)
 
+    # ANALYSIS_MODE=agents: delegate to the Agentex multi-agent orchestrator.
+    # The claim (id + stored image + inline analysis) already exists; the agent
+    # orchestrates Damage Detection + Cost Estimation against this claim and
+    # returns a narrative summary, which we attach to the claim. Best-effort:
+    # a failure here never breaks the claim (inline analysis still stands).
+    if settings.analysis_mode == "agents":
+        from app.services.agent_client import run_claim_via_agent, AgentUnavailableError
+        try:
+            agent_summary = await run_claim_via_agent(claim.id)
+            claim.notes = (
+                f"{claim.notes}\n\n[Agentex multi-agent analysis]\n{agent_summary}"
+                if claim.notes else f"[Agentex multi-agent analysis]\n{agent_summary}"
+            )
+            db.commit()
+            db.refresh(claim)
+        except AgentUnavailableError as exc:
+            # Log-and-continue — the inline claim is still valid.
+            print(f"[analyze] agent delegation failed (kept inline result): {exc}")
+
     return JSONResponse(content=claim.to_dict(), status_code=200)
+
+
+# ── POST /api/vision ──────────────────────────────────────────────────────────
+# Focused "Intake" step — vehicle + damage detection only. Used as an agent tool.
+
+@router.post("/vision", summary="Vision step: identify vehicle + damages")
+async def vision_step(
+    file: UploadFile = File(..., description="Car image (JPEG, PNG, WEBP)"),
+):
+    """Runs only the vision LLM step and returns vehicle + structured damages."""
+    if file.content_type not in _ALLOWED_TYPES:
+        raise HTTPException(
+            status_code=415,
+            detail=f"Unsupported file type '{file.content_type}'.",
+        )
+    image_bytes = await file.read()
+    if len(image_bytes) > _MAX_SIZE_BYTES:
+        raise HTTPException(status_code=413, detail="File too large (max 20 MB).")
+    try:
+        result = await identify_vehicle(image_bytes, file.content_type or "image/jpeg")
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Vision step failed: {exc}")
+    return JSONResponse(content=result, status_code=200)
+
+
+# ── POST /api/estimate ────────────────────────────────────────────────────────
+# Focused "Appraiser" step — per-item repair costs for a given damage list.
+
+@router.post("/estimate", summary="Estimate step: per-item repair costs")
+async def estimate_step(body: EstimateBody):
+    """Runs only the cost-estimation step and returns per-item costs + total."""
+    try:
+        result = await estimate_cost(
+            car_color=body.car_color or "Unknown",
+            car_model=body.car_model or "Unknown",
+            damages=body.damages or [],
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Estimate step failed: {exc}")
+    return JSONResponse(content=result, status_code=200)
 
 
 # ── GET /api/claims ───────────────────────────────────────────────────────────

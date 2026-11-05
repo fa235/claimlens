@@ -75,6 +75,17 @@ class Settings(BaseSettings):
     # (LLM-only pipeline — the vision model returns an overall confidence).
     review_confidence_threshold: float = 0.6
 
+    # ── Analysis mode ─────────────────────────────────────────
+    # "inline" — ClaimLens runs vision + cost directly in-process (default).
+    # "agents" — ClaimLens delegates to the Agentex multi-agent orchestrator
+    #            (Orchestrator → Damage Detection agent → Cost Estimation agent).
+    #            Requires the Agentex stack + claim-analyzer agent running.
+    analysis_mode: Literal["inline", "agents"] = "inline"
+
+    # Agentex backend RPC base (used only when analysis_mode=agents)
+    agentex_base_url: str = "http://localhost:5003"
+    agentex_agent_name: str = "claim-analyzer"
+
     # ── YOLOv8 ───────────────────────────────────────────────
     # Path to fine-tuned weights; falls back to pretrained yolov8n.pt if not set
     yolo_weights: str = "yolov8n.pt"

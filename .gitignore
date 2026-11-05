@@ -44,3 +44,13 @@ frontend/.vite/
 # ── OS ────────────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
+
+# ── Kiro (local IDE config — not part of the project) ─────────────────────────
+.kiro/
+
+# ── CarDD dataset (download separately — see README) ──────────────────────────
+# Do not commit the raw dataset; only eval scripts/results live in the repo.
+CarDD_release/
+CarDD_COCO/
+CarDD_SOD/
+**/CarDD*/

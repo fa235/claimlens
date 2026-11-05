@@ -1,0 +1,795 @@
+{
+  "summary": {
+    "num_images": 25,
+    "provider": "openai",
+    "vision_model": "gpt-4o",
+    "micro": {
+      "tp": 30,
+      "fp": 8,
+      "fn": 15,
+      "precision": 0.7894736842105263,
+      "recall": 0.6666666666666666,
+      "f1": 0.7228915662650601
+    },
+    "exact_set_match_rate": 0.44,
+    "any_damage_detection_rate": 1.0,
+    "per_category": {
+      "dent": {
+        "tp": 7,
+        "fp": 4,
+        "fn": 1,
+        "precision": 0.6363636363636364,
+        "recall": 0.875,
+        "f1": 0.7368421052631579,
+        "support": 8
+      },
+      "scratch": {
+        "tp": 10,
+        "fp": 2,
+        "fn": 3,
+        "precision": 0.8333333333333334,
+        "recall": 0.7692307692307693,
+        "f1": 0.8,
+        "support": 13
+      },
+      "crack": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 7,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 7
+      },
+      "glass shatter": {
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 3
+      },
+      "lamp broken": {
+        "tp": 6,
+        "fp": 2,
+        "fn": 2,
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75,
+        "support": 8
+      },
+      "tire flat": {
+        "tp": 4,
+        "fp": 0,
+        "fn": 2,
+        "precision": 1.0,
+        "recall": 0.6666666666666666,
+        "f1": 0.8,
+        "support": 6
+      }
+    }
+  },
+  "per_image": [
+    {
+      "file_name": "000013.jpg",
+      "gt_categories": [
+        "crack",
+        "glass shatter",
+        "tire flat"
+      ],
+      "predicted_categories": [
+        "glass shatter",
+        "tire flat"
+      ],
+      "exact_match": false,
+      "raw_damages": [
+        {
+          "raw_type": "rust",
+          "location": "front-left wheel arch",
+          "severity": "high",
+          "mapped_to": null
+        },
+        {
+          "raw_type": "flat tire",
+          "location": "front-left tire",
+          "severity": "high",
+          "mapped_to": "tire flat"
+        },
+        {
+          "raw_type": "broken windshield",
+          "location": "windshield",
+          "severity": "high",
+          "mapped_to": "glass shatter"
+        }
+      ],
+      "repair_cost_estimate": "$1,150",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000016.jpg",
+      "gt_categories": [
+        "dent",
+        "scratch"
+      ],
+      "predicted_categories": [
+        "scratch"
+      ],
+      "exact_match": false,
+      "raw_damages": [
+        {
+          "raw_type": "scratch",
+          "location": "front-left bumper",
+          "severity": "medium",
+          "mapped_to": "scratch"
+        }
+      ],
+      "repair_cost_estimate": "$250",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000017.jpg",
+      "gt_categories": [
+        "scratch"
+      ],
+      "predicted_categories": [
+        "scratch"
+      ],
+      "exact_match": true,
+      "raw_damages": [
+        {
+          "raw_type": "scratch",
+          "location": "lower side panel",
+          "severity": "medium",
+          "mapped_to": "scratch"
+        }
+      ],
+      "repair_cost_estimate": "$250",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000024.jpg",
+      "gt_categories": [
+        "scratch"
+      ],
+      "predicted_categories": [
+        "scratch"
+      ],
+      "exact_match": true,
+      "raw_damages": [
+        {
+          "raw_type": "scratch",
+          "location": "front-right bumper",
+          "severity": "medium",
+          "mapped_to": "scratch"
+        },
+        {
+          "raw_type": "paint transfer",
+          "location": "front-right bumper",
+          "severity": "medium",
+          "mapped_to": null
+        }
+      ],
+      "repair_cost_estimate": "$550",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000025.jpg",
+      "gt_categories": [
+        "scratch"
+      ],
+      "predicted_categories": [
+        "scratch"
+      ],
+      "exact_match": true,
+      "raw_damages": [
+        {
+          "raw_type": "scratch",
+          "location": "front-right bumper",
+          "severity": "medium",
+          "mapped_to": "scratch"
+        },
+        {
+          "raw_type": "scuff",
+          "location": "front-right bumper",
+          "severity": "medium",
+          "mapped_to": "scratch"
+        }
+      ],
+      "repair_cost_estimate": "$400",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000034.jpg",
+      "gt_categories": [
+        "crack",
+        "dent",
+        "lamp broken",
+        "scratch"
+      ],
+      "predicted_categories": [
+        "dent",
+        "lamp broken"
+      ],
+      "exact_match": false,
+      "raw_damages": [
+        {
+          "raw_type": "crumpled fender",
+          "location": "front-left corner",
+          "severity": "high",
+          "mapped_to": "dent"
+        },
+        {
+          "raw_type": "broken headlight",
+          "location": "front-left corner",
+          "severity": "high",
+          "mapped_to": "lamp broken"
+        }
+      ],
+      "repair_cost_estimate": "$2,000",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000035.jpg",
+      "gt_categories": [
+        "crack",
+        "dent",
+        "lamp broken",
+        "scratch"
+      ],
+      "predicted_categories": [
+        "dent",
+        "lamp broken"
+      ],
+      "exact_match": false,
+      "raw_damages": [
+        {
+          "raw_type": "dent",
+          "location": "front-left fender",
+          "severity": "high",
+          "mapped_to": "dent"
+        },
+        {
+          "raw_type": "broken headlight",
+          "location": "front-left",
+          "severity": "high",
+          "mapped_to": "lamp broken"
+        }
+      ],
+      "repair_cost_estimate": "$1,150",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000038.jpg",
+      "gt_categories": [
+        "dent",
+        "lamp broken"
+      ],
+      "predicted_categories": [
+        "dent",
+        "lamp broken"
+      ],
+      "exact_match": true,
+      "raw_damages": [
+        {
+          "raw_type": "dent",
+          "location": "front-right fender",
+          "severity": "high",
+          "mapped_to": "dent"
+        },
+        {
+          "raw_type": "broken headlight",
+          "location": "front-right",
+          "severity": "high",
+          "mapped_to": "lamp broken"
+        },
+        {
+          "raw_type": "bumper damage",
+          "location": "front-right bumper",
+          "severity": "high",
+          "mapped_to": null
+        }
+      ],
+      "repair_cost_estimate": "$2,050",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000047.jpg",
+      "gt_categories": [
+        "dent",
+        "lamp broken"
+      ],
+      "predicted_categories": [
+        "dent",
+        "lamp broken"
+      ],
+      "exact_match": true,
+      "raw_damages": [
+        {
+          "raw_type": "broken headlight",
+          "location": "front-right",
+          "severity": "high",
+          "mapped_to": "lamp broken"
+        },
+        {
+          "raw_type": "bumper damage",
+          "location": "front-right",
+          "severity": "medium",
+          "mapped_to": null
+        },
+        {
+          "raw_type": "dent",
+          "location": "front-right fender",
+          "severity": "medium",
+          "mapped_to": "dent"
+        }
+      ],
+      "repair_cost_estimate": "$1,100",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000054.jpg",
+      "gt_categories": [
+        "lamp broken",
+        "scratch",
+        "tire flat"
+      ],
+      "predicted_categories": [
+        "dent",
+        "scratch"
+      ],
+      "exact_match": false,
+      "raw_damages": [
+        {
+          "raw_type": "dent",
+          "location": "front-left bumper",
+          "severity": "medium",
+          "mapped_to": "dent"
+        },
+        {
+          "raw_type": "scratch",
+          "location": "front-left bumper",
+          "severity": "medium",
+          "mapped_to": "scratch"
+        }
+      ],
+      "repair_cost_estimate": "$650",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000058.jpg",
+      "gt_categories": [
+        "tire flat"
+      ],
+      "predicted_categories": [
+        "tire flat"
+      ],
+      "exact_match": true,
+      "raw_damages": [
+        {
+          "raw_type": "fender damage",
+          "location": "front-right fender",
+          "severity": "high",
+          "mapped_to": null
+        },
+        {
+          "raw_type": "flat tire",
+          "location": "front-right wheel",
+          "severity": "high",
+          "mapped_to": "tire flat"
+        }
+      ],
+      "repair_cost_estimate": "$1,450",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000059.jpg",
+      "gt_categories": [
+        "tire flat"
+      ],
+      "predicted_categories": [
+        "lamp broken"
+      ],
+      "exact_match": false,
+      "raw_damages": [
+        {
+          "raw_type": "bumper damage",
+          "location": "front-left bumper",
+          "severity": "high",
+          "mapped_to": null
+        },
+        {
+          "raw_type": "wheel damage",
+          "location": "front-left wheel",
+          "severity": "high",
+          "mapped_to": null
+        },
+        {
+          "raw_type": "broken headlight",
+          "location": "front-left",
+          "severity": "high",
+          "mapped_to": "lamp broken"
+        }
+      ],
+      "repair_cost_estimate": "$2,100",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000060.jpg",
+      "gt_categories": [
+        "tire flat"
+      ],
+      "predicted_categories": [
+        "tire flat"
+      ],
+      "exact_match": true,
+      "raw_damages": [
+        {
+          "raw_type": "flat tire",
+          "location": "front-left tire",
+          "severity": "high",
+          "mapped_to": "tire flat"
+        },
+        {
+          "raw_type": "bumper damage",
+          "location": "front-left bumper",
+          "severity": "medium",
+          "mapped_to": null
+        }
+      ],
+      "repair_cost_estimate": "$550",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000080.jpg",
+      "gt_categories": [
+        "dent",
+        "lamp broken",
+        "tire flat"
+      ],
+      "predicted_categories": [
+        "dent",
+        "tire flat"
+      ],
+      "exact_match": false,
+      "raw_damages": [
+        {
+          "raw_type": "crumpled bodywork",
+          "location": "rear-left side",
+          "severity": "high",
+          "mapped_to": "dent"
+        },
+        {
+          "raw_type": "flat tire",
+          "location": "rear-left wheel",
+          "severity": "high",
+          "mapped_to": "tire flat"
+        }
+      ],
+      "repair_cost_estimate": "$1,350",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000083.jpg",
+      "gt_categories": [
+        "lamp broken",
+        "scratch"
+      ],
+      "predicted_categories": [
+        "dent",
+        "lamp broken",
+        "scratch"
+      ],
+      "exact_match": false,
+      "raw_damages": [
+        {
+          "raw_type": "scratch",
+          "location": "rear bumper",
+          "severity": "medium",
+          "mapped_to": "scratch"
+        },
+        {
+          "raw_type": "dent",
+          "location": "rear bumper",
+          "severity": "medium",
+          "mapped_to": "dent"
+        },
+        {
+          "raw_type": "broken taillight",
+          "location": "rear",
+          "severity": "high",
+          "mapped_to": "lamp broken"
+        }
+      ],
+      "repair_cost_estimate": "$850",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000084.jpg",
+      "gt_categories": [
+        "crack"
+      ],
+      "predicted_categories": [
+        "scratch"
+      ],
+      "exact_match": false,
+      "raw_damages": [
+        {
+          "raw_type": "hole",
+          "location": "rear bumper",
+          "severity": "high",
+          "mapped_to": null
+        },
+        {
+          "raw_type": "scratch",
+          "location": "rear bumper",
+          "severity": "medium",
+          "mapped_to": "scratch"
+        }
+      ],
+      "repair_cost_estimate": "$1,000",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000086.jpg",
+      "gt_categories": [
+        "crack",
+        "dent",
+        "scratch"
+      ],
+      "predicted_categories": [
+        "dent",
+        "scratch"
+      ],
+      "exact_match": false,
+      "raw_damages": [
+        {
+          "raw_type": "dent",
+          "location": "rear-right side",
+          "severity": "high",
+          "mapped_to": "dent"
+        },
+        {
+          "raw_type": "scratch",
+          "location": "rear-right side",
+          "severity": "medium",
+          "mapped_to": "scratch"
+        }
+      ],
+      "repair_cost_estimate": "$1,500",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000089.jpg",
+      "gt_categories": [
+        "crack"
+      ],
+      "predicted_categories": [
+        "dent",
+        "scratch"
+      ],
+      "exact_match": false,
+      "raw_damages": [
+        {
+          "raw_type": "scratches",
+          "location": "rear bumper",
+          "severity": "high",
+          "mapped_to": "scratch"
+        },
+        {
+          "raw_type": "dent",
+          "location": "rear bumper",
+          "severity": "medium",
+          "mapped_to": "dent"
+        },
+        {
+          "raw_type": "missing part",
+          "location": "rear bumper",
+          "severity": "high",
+          "mapped_to": null
+        }
+      ],
+      "repair_cost_estimate": "$2,200",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000091.jpg",
+      "gt_categories": [
+        "glass shatter"
+      ],
+      "predicted_categories": [
+        "glass shatter"
+      ],
+      "exact_match": true,
+      "raw_damages": [
+        {
+          "raw_type": "shattered glass",
+          "location": "windshield",
+          "severity": "high",
+          "mapped_to": "glass shatter"
+        }
+      ],
+      "repair_cost_estimate": "$400",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000097.jpg",
+      "gt_categories": [
+        "scratch"
+      ],
+      "predicted_categories": [
+        "lamp broken"
+      ],
+      "exact_match": false,
+      "raw_damages": [
+        {
+          "raw_type": "scratch",
+          "location": "front bumper near indicator light",
+          "severity": "medium",
+          "mapped_to": "lamp broken"
+        },
+        {
+          "raw_type": "scuff",
+          "location": "front bumper near indicator light",
+          "severity": "medium",
+          "mapped_to": "lamp broken"
+        }
+      ],
+      "repair_cost_estimate": "$400",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000102.jpg",
+      "gt_categories": [
+        "crack",
+        "lamp broken"
+      ],
+      "predicted_categories": [
+        "lamp broken"
+      ],
+      "exact_match": false,
+      "raw_damages": [
+        {
+          "raw_type": "broken headlight",
+          "location": "front-right",
+          "severity": "high",
+          "mapped_to": "lamp broken"
+        },
+        {
+          "raw_type": "bumper damage",
+          "location": "front-right",
+          "severity": "medium",
+          "mapped_to": null
+        }
+      ],
+      "repair_cost_estimate": "$1,800",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000103.jpg",
+      "gt_categories": [
+        "dent",
+        "glass shatter"
+      ],
+      "predicted_categories": [
+        "dent",
+        "glass shatter"
+      ],
+      "exact_match": true,
+      "raw_damages": [
+        {
+          "raw_type": "shattered glass",
+          "location": "windshield",
+          "severity": "high",
+          "mapped_to": "glass shatter"
+        },
+        {
+          "raw_type": "dent",
+          "location": "hood",
+          "severity": "medium",
+          "mapped_to": "dent"
+        }
+      ],
+      "repair_cost_estimate": "$700",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000105.jpg",
+      "gt_categories": [
+        "scratch"
+      ],
+      "predicted_categories": [
+        "dent",
+        "scratch"
+      ],
+      "exact_match": false,
+      "raw_damages": [
+        {
+          "raw_type": "scratch",
+          "location": "rear door",
+          "severity": "medium",
+          "mapped_to": "scratch"
+        },
+        {
+          "raw_type": "dent",
+          "location": "rear door",
+          "severity": "medium",
+          "mapped_to": "dent"
+        }
+      ],
+      "repair_cost_estimate": "$450",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000107.jpg",
+      "gt_categories": [
+        "scratch"
+      ],
+      "predicted_categories": [
+        "scratch"
+      ],
+      "exact_match": true,
+      "raw_damages": [
+        {
+          "raw_type": "scratch",
+          "location": "rear wheel arch",
+          "severity": "medium",
+          "mapped_to": "scratch"
+        },
+        {
+          "raw_type": "paint peeling",
+          "location": "rear wheel arch",
+          "severity": "medium",
+          "mapped_to": null
+        }
+      ],
+      "repair_cost_estimate": "$550",
+      "damage_confidence": 0.95,
+      "error": null
+    },
+    {
+      "file_name": "000109.jpg",
+      "gt_categories": [
+        "scratch"
+      ],
+      "predicted_categories": [
+        "scratch"
+      ],
+      "exact_match": true,
+      "raw_damages": [
+        {
+          "raw_type": "scratch",
+          "location": "lower side panel",
+          "severity": "medium",
+          "mapped_to": "scratch"
+        }
+      ],
+      "repair_cost_estimate": "$300",
+      "damage_confidence": 0.9,
+      "error": null
+    }
+  ]
+}

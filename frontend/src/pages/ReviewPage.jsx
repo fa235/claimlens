@@ -75,13 +75,17 @@ export default function ReviewPage() {
   const setItem = (idx, patch) =>
     setDamages((list) => list.map((d, i) => (i === idx ? { ...d, ...patch } : d)));
 
-  // Editing a field on an auto-detected line marks it "modified".
+  // Editing a field marks the line "modified" — but ONLY when the value
+  // actually changes. (A number input can fire onChange with an identical
+  // value during render/normalization; without this guard that would silently
+  // flip a pending line to "modified", require a note, and grey out Approve.)
   const editField = (idx, key, value) =>
     setDamages((list) =>
       list.map((d, i) => {
         if (i !== idx) return d;
+        if (d[key] === value) return d; // no real change → leave status alone
         const next = { ...d, [key]: value };
-        if (d.status !== 'added') next.status = 'modified';
+        if (d.status !== 'added' && d.status !== 'declined') next.status = 'modified';
         return next;
       })
     );
@@ -97,10 +101,11 @@ export default function ReviewPage() {
     .filter((d) => d.status !== 'declined')
     .reduce((sum, d) => sum + (Number(d.cost) || 0), 0);
 
-  // Any modified/declined/added line missing its note?
-  const missingNotes = damages.some(
+  // Count of modified/declined/added lines still missing their note.
+  const unnotedCount = damages.filter(
     (d) => NOTE_REQUIRED.has(d.status) && !String(d.note || '').trim()
-  );
+  ).length;
+  const missingNotes = unnotedCount > 0;
 
   const isProcessed = claim && claim.status !== 'pending';
 
@@ -125,6 +130,13 @@ export default function ReviewPage() {
   };
 
   const saveReview = async () => {
+    if (unnotedCount > 0) {
+      setError(
+        `Add a note to ${unnotedCount} changed item${unnotedCount > 1 ? 's' : ''} ` +
+        `(every modified, declined, or added item needs a note) before saving.`
+      );
+      return;
+    }
     setSaving(true);
     setError(null);
     try {
@@ -137,6 +149,15 @@ export default function ReviewPage() {
   };
 
   const decide = async (action) => {
+    // Enforce the note rule at click-time (not by disabling the button), with a
+    // precise message, so the processor is never stuck wondering why.
+    if (unnotedCount > 0) {
+      setError(
+        `Add a note to ${unnotedCount} changed item${unnotedCount > 1 ? 's' : ''} ` +
+        `(every modified, declined, or added item needs a note) before you can ${action}.`
+      );
+      return;
+    }
     setSaving(true);
     setError(null);
     try {
@@ -366,16 +387,16 @@ export default function ReviewPage() {
               )}
 
               <div className="review-page__actions">
-                <button className="btn btn--secondary" onClick={saveReview}
-                  disabled={saving || missingNotes}>
+                {/* Buttons are only disabled while actively saving — never
+                    silently greyed for missing notes. The note rule is enforced
+                    on click with a precise message (see decide/saveReview). */}
+                <button className="btn btn--secondary" onClick={saveReview} disabled={saving}>
                   Save Review
                 </button>
-                <button className="btn btn--danger" onClick={() => decide('reject')}
-                  disabled={saving || missingNotes}>
+                <button className="btn btn--danger" onClick={() => decide('reject')} disabled={saving}>
                   Reject Claim
                 </button>
-                <button className="btn btn--primary" onClick={() => decide('approve')}
-                  disabled={saving || missingNotes}>
+                <button className="btn btn--primary" onClick={() => decide('approve')} disabled={saving}>
                   Approve Claim
                 </button>
               </div>
