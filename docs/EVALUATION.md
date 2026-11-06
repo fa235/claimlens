@@ -247,25 +247,26 @@ estimate is the reference; OpenAI's deviation from it is measured.
 
 ### Reproduction
 
-Scripts live in `backend/scripts/`; inputs/ground truth in `backend/data/`;
+Eval scripts live in `backend/eval/` (`detection/` for damage accuracy,
+`cost/` for the cost benchmark); inputs/ground truth in `backend/data/`;
 generated results in `backend/reports/`. Run everything from `backend/`:
 
 ```bash
 cd backend
-python scripts/eval/build_gt.py     # -> data/eval_cardd_gt.json
-python scripts/eval/run.py          # -> reports/eval_cardd_results.json, reports/eval_cardd_report.md
-python scripts/cost/build_inputs.py # -> data/cost_inputs.json
-python scripts/cost/run_openai.py   # -> reports/openai_cost_results.json
-python scripts/cost/compare.py      # -> reports/cost_comparison.json, reports/cost_benchmark_report.md
+python eval/detection/build_gt.py # -> data/eval_cardd_gt.json
+python eval/detection/run.py      # -> reports/eval_cardd_results.json, reports/eval_cardd_report.md
+python eval/cost/build_inputs.py  # -> data/cost_inputs.json
+python eval/cost/run_openai.py    # -> reports/openai_cost_results.json
+python eval/cost/compare.py       # -> reports/cost_comparison.json, reports/cost_benchmark_report.md
 ```
 
 | File | Purpose |
 |---|---|
-| `scripts/eval/build_gt.py` | Build CarDD ground-truth category sets (25 images) |
+| `eval/detection/build_gt.py` | Build CarDD ground-truth category sets (25 images) |
 | `data/eval_cardd_gt.json` | Ground-truth sets |
-| `scripts/eval/run.py` | Run detection eval |
+| `eval/detection/run.py` | Run detection eval |
 | `reports/eval_cardd_results.json` / `reports/eval_cardd_report.md` | Detection results + report |
-| `scripts/cost/build_inputs.py` / `data/cost_inputs.json` | Build shared cost inputs |
+| `eval/cost/build_inputs.py` / `data/cost_inputs.json` | Build shared cost inputs |
 | `data/claude_cost_benchmark.json` | Claude reference cost estimates |
-| `scripts/cost/run_openai.py` / `reports/openai_cost_results.json` | OpenAI cost run |
-| `scripts/cost/compare.py` / `reports/cost_comparison.json` / `reports/cost_benchmark_report.md` | Cost comparison |
+| `eval/cost/run_openai.py` / `reports/openai_cost_results.json` | OpenAI cost run |
+| `eval/cost/compare.py` / `reports/cost_comparison.json` / `reports/cost_benchmark_report.md` | Cost comparison |
