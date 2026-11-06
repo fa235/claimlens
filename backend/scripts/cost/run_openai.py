@@ -8,14 +8,14 @@ import os
 import sys
 
 os.environ.setdefault("DATABASE_URL", "sqlite:///./eval_cardd.db")
-sys.path.insert(0, os.path.dirname(__file__))
+BACKEND_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+sys.path.insert(0, BACKEND_ROOT)
 
 from app.services.cost_estimator import estimate_cost  # noqa: E402
 from app.core.config import settings  # noqa: E402
 
-HERE = os.path.dirname(__file__)
-INPUTS = os.path.join(HERE, "cost_inputs.json")
-OUT = os.path.join(HERE, "openai_cost_results.json")
+INPUTS = os.path.join(BACKEND_ROOT, "data", "cost_inputs.json")
+OUT = os.path.join(BACKEND_ROOT, "reports", "openai_cost_results.json")
 
 
 async def run():

@@ -23,15 +23,16 @@ import sys
 # Run against a throwaway sqlite DB so the import of app.* never touches postgres.
 os.environ.setdefault("DATABASE_URL", "sqlite:///./eval_cardd.db")
 
-sys.path.insert(0, os.path.dirname(__file__))
+# backend/ root (two levels up from backend/scripts/eval/) so `import app` works.
+BACKEND_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+sys.path.insert(0, BACKEND_ROOT)
 
 from app.services.analyzer import analyze_image  # noqa: E402
 from app.core.config import settings  # noqa: E402
 
-HERE = os.path.dirname(__file__)
-GT_PATH = os.path.join(HERE, "eval_cardd_gt.json")
-RESULTS_JSON = os.path.join(HERE, "eval_cardd_results.json")
-REPORT_MD = os.path.join(HERE, "eval_cardd_report.md")
+GT_PATH = os.path.join(BACKEND_ROOT, "data", "eval_cardd_gt.json")
+RESULTS_JSON = os.path.join(BACKEND_ROOT, "reports", "eval_cardd_results.json")
+REPORT_MD = os.path.join(BACKEND_ROOT, "reports", "eval_cardd_report.md")
 
 CATEGORIES = ["dent", "scratch", "crack", "glass shatter", "lamp broken", "tire flat"]
 

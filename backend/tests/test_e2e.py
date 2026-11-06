@@ -1,13 +1,18 @@
 import os, sys, asyncio, json
 os.environ['DATABASE_URL'] = 'sqlite:///./test_e2e.db'
-sys.path.insert(0, '.')
+
+# backend/ root (one level up from backend/tests/) so `import app` works from anywhere.
+BACKEND_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, BACKEND_ROOT)
 
 from app.services.analyzer import analyze_image
 from app.core.config import settings
 
+DEFAULT_IMAGE = os.path.join(BACKEND_ROOT, "tests", "fixtures", "images", "input_car_1.jpg")
+
 
 async def main():
-    img_path = sys.argv[1] if len(sys.argv) > 1 else "test_images/input_car_1.jpg"
+    img_path = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_IMAGE
     print(f"Provider: {settings.llm_provider}")
     print(f"Vision model: {settings.openai_vision_model}")
     print(f"Cost model: {settings.openai_cost_model}")

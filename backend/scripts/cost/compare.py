@@ -17,11 +17,11 @@ import json
 import os
 import statistics as st
 
-HERE = os.path.dirname(__file__)
-CLAUDE = os.path.join(HERE, "claude_cost_benchmark.json")
-OPENAI = os.path.join(HERE, "openai_cost_results.json")
-OUT_JSON = os.path.join(HERE, "cost_comparison.json")
-OUT_MD = os.path.join(HERE, "cost_benchmark_report.md")
+BACKEND_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+CLAUDE = os.path.join(BACKEND_ROOT, "data", "claude_cost_benchmark.json")
+OPENAI = os.path.join(BACKEND_ROOT, "reports", "openai_cost_results.json")
+OUT_JSON = os.path.join(BACKEND_ROOT, "reports", "cost_comparison.json")
+OUT_MD = os.path.join(BACKEND_ROOT, "reports", "cost_benchmark_report.md")
 
 
 def _pearson(xs, ys):

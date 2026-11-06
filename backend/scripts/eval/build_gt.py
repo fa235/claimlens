@@ -7,7 +7,8 @@ from collections import Counter
 ANN_PATH = "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/annotations/instances_val2017.json"
 IMG_DIR = "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017"
 N = 25
-OUT = os.path.join(os.path.dirname(__file__), "eval_cardd_gt.json")
+BACKEND_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+OUT = os.path.join(BACKEND_ROOT, "data", "eval_cardd_gt.json")
 
 
 def main():

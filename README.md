@@ -2,8 +2,9 @@
 
 AI-assisted car-insurance claim processing. A customer uploads a photo of the
 damage; ClaimLens identifies the vehicle and every visible damage area, prices
-an itemized repair estimate, and files the claim. Low-confidence claims are
-flagged for a human processor, who reviews, edits, and approves line items.
+an itemized repair estimate, and files the claim. Every claim is reviewed by a
+human processor, who reviews, edits, and approves line items; low-confidence
+results are flagged so the processor knows to look closer.
 
 > From a week of back-and-forth to an estimate in seconds, with a human in the loop.
 
@@ -120,12 +121,13 @@ GPT-4o as the analysis engine.
    location) plus an overall confidence.
 4. **Cost call.** Each damage item is priced by a second GPT-4o call into an
    itemized repair estimate; the claim total excludes declined items.
-5. **Flag or file.** If the damage confidence is below
-   `REVIEW_CONFIDENCE_THRESHOLD`, the claim is flagged for human review;
-   otherwise it is filed. Everything is written to Postgres.
-6. **Human review.** The processor opens the queue, sees the itemized estimate
-   and confidence, then approves, edits, or declines line items before
-   approving or rejecting the claim.
+5. **File for review.** The claim is written to Postgres as `pending` and
+   enters the processor queue. If the damage confidence is below
+   `REVIEW_CONFIDENCE_THRESHOLD`, it is additionally flagged (`needs_human_review`)
+   so the processor knows to look closer.
+6. **Human review.** Every claim is reviewed by a processor, who opens the
+   queue, sees the itemized estimate and confidence, then approves, edits, or
+   declines line items before approving or rejecting the claim.
 7. **Status back to the owner.** The owner sees the claim progress through
    _Image Uploaded → Damage Evaluated → Claim Submitted → Awaiting Processor
    Review_.

@@ -21,9 +21,9 @@ Writes cost_inputs.json:
 import json
 import os
 
-HERE = os.path.dirname(__file__)
-SRC = os.path.join(HERE, "eval_cardd_results.json")
-OUT = os.path.join(HERE, "cost_inputs.json")
+BACKEND_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+SRC = os.path.join(BACKEND_ROOT, "reports", "eval_cardd_results.json")
+OUT = os.path.join(BACKEND_ROOT, "data", "cost_inputs.json")
 
 
 def main():

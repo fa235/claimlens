@@ -245,15 +245,27 @@ estimate is the reference; OpenAI's deviation from it is measured.
 4. **Detection uses a keyword mapper** from free text to the 6 categories; some
    misses are mapping artifacts rather than model errors.
 
-### Reproduction (artifacts in `backend/`)
+### Reproduction
+
+Scripts live in `backend/scripts/`; inputs/ground truth in `backend/data/`;
+generated results in `backend/reports/`. Run everything from `backend/`:
+
+```bash
+cd backend
+python scripts/eval/build_gt.py     # -> data/eval_cardd_gt.json
+python scripts/eval/run.py          # -> reports/eval_cardd_results.json, reports/eval_cardd_report.md
+python scripts/cost/build_inputs.py # -> data/cost_inputs.json
+python scripts/cost/run_openai.py   # -> reports/openai_cost_results.json
+python scripts/cost/compare.py      # -> reports/cost_comparison.json, reports/cost_benchmark_report.md
+```
 
 | File | Purpose |
 |---|---|
-| `eval_build_gt.py` | Build CarDD ground-truth category sets (25 images) |
-| `eval_cardd_gt.json` | Ground-truth sets |
-| `eval_cardd.py` | Run detection eval |
-| `eval_cardd_results.json` / `eval_cardd_report.md` | Detection results + report |
-| `cost_build_inputs.py` / `cost_inputs.json` | Build shared cost inputs |
-| `claude_cost_benchmark.json` | Claude reference cost estimates |
-| `cost_run_openai.py` / `openai_cost_results.json` | OpenAI cost run |
-| `cost_compare.py` / `cost_comparison.json` / `cost_benchmark_report.md` | Cost comparison |
+| `scripts/eval/build_gt.py` | Build CarDD ground-truth category sets (25 images) |
+| `data/eval_cardd_gt.json` | Ground-truth sets |
+| `scripts/eval/run.py` | Run detection eval |
+| `reports/eval_cardd_results.json` / `reports/eval_cardd_report.md` | Detection results + report |
+| `scripts/cost/build_inputs.py` / `data/cost_inputs.json` | Build shared cost inputs |
+| `data/claude_cost_benchmark.json` | Claude reference cost estimates |
+| `scripts/cost/run_openai.py` / `reports/openai_cost_results.json` | OpenAI cost run |
+| `scripts/cost/compare.py` / `reports/cost_comparison.json` / `reports/cost_benchmark_report.md` | Cost comparison |
