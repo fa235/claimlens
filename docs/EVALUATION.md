@@ -252,14 +252,24 @@ Eval scripts live in `backend/eval/` (`damage_detection/` for damage accuracy,
 `backend/data/`; generated results in `backend/reports/`. Run everything from
 `backend/`:
 
+Requires the backend dependencies, an `OPENAI_API_KEY`, and — for the detection
+eval only — the CarDD dataset, with `CARDD_ROOT` pointing at the extracted
+`CarDD_release` directory. Setup details are in
+[`backend/eval/README.md`](../backend/eval/README.md).
+
 ```bash
 cd backend
+export CARDD_ROOT=~/Downloads/CarDD_release
+
 python eval/damage_detection/build_gt.py # -> data/eval_cardd_gt.json
 python eval/damage_detection/run.py      # -> reports/eval_cardd_results.json, reports/eval_cardd_report.md
 python eval/cost_estimation/build_inputs.py # -> data/cost_inputs.json
 python eval/cost_estimation/run_openai.py   # -> reports/openai_cost_results.json
 python eval/cost_estimation/compare.py      # -> reports/cost_comparison.json, reports/cost_benchmark_report.md
 ```
+
+`data/eval_cardd_gt.json` is committed, so `build_gt.py` only needs re-running to
+change the image sample.
 
 | File | Purpose |
 |---|---|

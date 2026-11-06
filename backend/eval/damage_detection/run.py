@@ -23,7 +23,8 @@ import sys
 # Run against a throwaway sqlite DB so the import of app.* never touches postgres.
 os.environ.setdefault("DATABASE_URL", "sqlite:///./eval_cardd.db")
 
-# backend/ root (two levels up from backend/scripts/eval/) so `import app` works.
+# backend/ root (two levels up from backend/eval/damage_detection/) so
+# `import app` works.
 BACKEND_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.insert(0, BACKEND_ROOT)
 
@@ -33,6 +34,29 @@ from app.core.config import settings  # noqa: E402
 GT_PATH = os.path.join(BACKEND_ROOT, "data", "eval_cardd_gt.json")
 RESULTS_JSON = os.path.join(BACKEND_ROOT, "reports", "eval_cardd_results.json")
 REPORT_MD = os.path.join(BACKEND_ROOT, "reports", "eval_cardd_report.md")
+
+# The committed ground-truth file stores absolute image paths from whichever
+# machine built it. Fall back to resolving by file name under CARDD_ROOT so the
+# eval is runnable anywhere without rebuilding ground truth.
+CARDD_ROOT = os.path.expanduser(os.environ.get("CARDD_ROOT", "~/Downloads/CarDD_release"))
+CARDD_IMG_DIR = os.path.join(CARDD_ROOT, "CarDD_COCO", "val2017")
+
+
+def resolve_image_path(row: dict) -> str:
+    """Return a usable path for a GT row, or raise with a helpful message."""
+    if os.path.exists(row["path"]):
+        return row["path"]
+    local = os.path.join(CARDD_IMG_DIR, row["file_name"])
+    if os.path.exists(local):
+        return local
+    raise SystemExit(
+        f"CarDD image not found: {row['file_name']}\n"
+        f"  tried: {row['path']}\n"
+        f"  tried: {local}\n\n"
+        "Download CarDD from https://cardd-ustc.github.io/ and set CARDD_ROOT\n"
+        "to the extracted CarDD_release directory, e.g.:\n"
+        "  export CARDD_ROOT=~/Downloads/CarDD_release"
+    )
 
 CATEGORIES = ["dent", "scratch", "crack", "glass shatter", "lamp broken", "tire flat"]
 
@@ -97,7 +121,7 @@ async def run():
     any_damage_correct = 0
 
     for i, row in enumerate(gt_rows, 1):
-        path = row["path"]
+        path = resolve_image_path(row)
         ext = os.path.splitext(path)[1].lower()
         media = "image/png" if ext == ".png" else "image/jpeg"
         with open(path, "rb") as f:

@@ -4,14 +4,25 @@ import json
 import os
 from collections import Counter
 
-ANN_PATH = "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/annotations/instances_val2017.json"
-IMG_DIR = "/Users/apoorvakiran/Downloads/CarDD_release/CarDD_COCO/val2017"
+# Where the CarDD dataset was extracted. Download it separately (see the root
+# README) and point CARDD_ROOT at the extracted CarDD_release directory:
+#   export CARDD_ROOT=~/Downloads/CarDD_release
+CARDD_ROOT = os.path.expanduser(os.environ.get("CARDD_ROOT", "~/Downloads/CarDD_release"))
+ANN_PATH = os.path.join(CARDD_ROOT, "CarDD_COCO", "annotations", "instances_val2017.json")
+IMG_DIR = os.path.join(CARDD_ROOT, "CarDD_COCO", "val2017")
 N = 25
 BACKEND_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 OUT = os.path.join(BACKEND_ROOT, "data", "eval_cardd_gt.json")
 
 
 def main():
+    if not os.path.exists(ANN_PATH):
+        raise SystemExit(
+            f"CarDD annotations not found at:\n  {ANN_PATH}\n\n"
+            "Download CarDD from https://cardd-ustc.github.io/ and set CARDD_ROOT\n"
+            "to the extracted CarDD_release directory, e.g.:\n"
+            "  export CARDD_ROOT=~/Downloads/CarDD_release"
+        )
     d = json.load(open(ANN_PATH))
     cats = {c["id"]: c["name"] for c in d["categories"]}
 

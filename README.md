@@ -218,3 +218,25 @@ Full methodology, per-category metrics, and caveats are in
 > **CarDD — https://cardd-ustc.github.io/**
 > (paper: [arXiv:2211.00945](https://arxiv.org/abs/2211.00945)). The eval
 > scripts expect the `CarDD_COCO/val2017` images.
+
+### Running the evaluation yourself
+
+The harnesses live in `backend/eval/` (`damage_detection/` for accuracy,
+`cost_estimation/` for the cost benchmark). They are on-demand scripts, not part
+of the running service. Note that they make real `gpt-4o` calls, so they cost
+money.
+
+```bash
+cd backend
+source venv/bin/activate                  # deps from requirements.txt
+export OPENAI_API_KEY=sk-...              # or set it in backend/.env
+export CARDD_ROOT=~/Downloads/CarDD_release   # where you extracted CarDD
+
+python eval/damage_detection/run.py       # score detection vs CarDD ground truth
+python eval/cost_estimation/compare.py    # compare cost estimates vs reference
+```
+
+Ground truth and inputs are committed under `backend/data/`, so you can run the
+scoring steps directly. Full setup, the complete pipeline order, and what each
+script reads/writes are documented in
+[`backend/eval/README.md`](backend/eval/README.md).
