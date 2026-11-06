@@ -6,11 +6,11 @@ inputs/ground truth to `data/` and generated results to `reports/`.
 
 Two kinds of evaluation:
 
-- `detection/` — **accuracy**: how well damage detection matches the CarDD
-  dataset's human-labeled ground truth.
-- `cost/` — **cost estimates**: how ClaimLens's OpenAI repair-cost estimates
-  compare against a Claude reference run (agreement, not real-price accuracy —
-  CarDD has no cost labels).
+- `damage_detection/` — **accuracy**: how well damage detection matches the
+  CarDD dataset's human-labeled ground truth.
+- `cost_estimation/` — **cost estimates**: how ClaimLens's OpenAI repair-cost
+  estimates compare against a Claude reference run (agreement, not real-price
+  accuracy — CarDD has no cost labels).
 
 All scripts resolve paths relative to the backend root, so run them from the
 `backend/` directory:
@@ -19,26 +19,26 @@ All scripts resolve paths relative to the backend root, so run them from the
 cd backend
 ```
 
-## detection/ — CarDD damage-detection evaluation
+## damage_detection/ — CarDD damage-detection evaluation
 
 ```bash
-python eval/detection/build_gt.py   # build ground truth  -> data/eval_cardd_gt.json
-python eval/detection/run.py        # run pipeline vs GT   -> reports/eval_cardd_results.json, reports/eval_cardd_report.md
+python eval/damage_detection/build_gt.py   # build ground truth  -> data/eval_cardd_gt.json
+python eval/damage_detection/run.py        # run pipeline vs GT   -> reports/eval_cardd_results.json, reports/eval_cardd_report.md
 ```
 
 `build_gt.py` reads the raw CarDD dataset from the path hard-coded at the top of
 the file (download CarDD separately — see the root `README.md`).
 
-## cost/ — LLM cost benchmark
+## cost_estimation/ — LLM cost benchmark
 
 ```bash
-python eval/cost/build_inputs.py   # reports/eval_cardd_results.json -> data/cost_inputs.json
-python eval/cost/run_openai.py     # data/cost_inputs.json           -> reports/openai_cost_results.json
-python eval/cost/compare.py        # openai + claude benchmarks      -> reports/cost_comparison.json, reports/cost_benchmark_report.md
+python eval/cost_estimation/build_inputs.py   # reports/eval_cardd_results.json -> data/cost_inputs.json
+python eval/cost_estimation/run_openai.py     # data/cost_inputs.json           -> reports/openai_cost_results.json
+python eval/cost_estimation/compare.py        # openai + claude benchmarks      -> reports/cost_comparison.json, reports/cost_benchmark_report.md
 ```
 
 ## Pipeline order
 
 ```
-detection/build_gt.py  ->  detection/run.py  ->  cost/build_inputs.py  ->  cost/run_openai.py  ->  cost/compare.py
+damage_detection/build_gt.py  ->  damage_detection/run.py  ->  cost_estimation/build_inputs.py  ->  cost_estimation/run_openai.py  ->  cost_estimation/compare.py
 ```
