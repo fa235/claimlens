@@ -1,0 +1,97 @@
+{
+    "family": "claimlens-backend",
+    "networkMode": "awsvpc",
+    "cpu": "2048",
+    "memory": "4096",
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "executionRoleArn": "arn:aws:iam::{{ACCOUNT_ID}}:role/ClaimLensECSExecutionRole",
+    "taskRoleArn": "arn:aws:iam::{{ACCOUNT_ID}}:role/ClaimLensBackendInstanceRole",
+    "containerDefinitions": [
+        {
+            "name": "Main",
+            "image": "{{ACCOUNT_ID}}.dkr.ecr.{{REGION}}.amazonaws.com/claimlens-backend:latest",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "containerPort": 8000,
+                    "hostPort": 8000,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "environment": [
+                {
+                    "name": "S3_BUCKET",
+                    "value": "{{S3_BUCKET}}"
+                },
+                {
+                    "name": "OPENAI_COST_MODEL",
+                    "value": "gpt-4o"
+                },
+                {
+                    "name": "AWS_REGION",
+                    "value": "{{REGION}}"
+                },
+                {
+                    "name": "APP_NAME",
+                    "value": "ClaimLens API"
+                },
+                {
+                    "name": "HF_DAMAGE_MODEL",
+                    "value": "Naiscorp/car-damage-detection"
+                },
+                {
+                    "name": "SAVE_ANNOTATED",
+                    "value": "true"
+                },
+                {
+                    "name": "STORAGE_BACKEND",
+                    "value": "s3"
+                },
+                {
+                    "name": "LLM_PROVIDER",
+                    "value": "openai"
+                },
+                {
+                    "name": "DAMAGE_CONF_THRESHOLD",
+                    "value": "0.5"
+                },
+                {
+                    "name": "CORS_ORIGINS",
+                    "value": "http://{{ALB_DNS}}"
+                },
+                {
+                    "name": "OPENAI_VISION_MODEL",
+                    "value": "gpt-4o"
+                },
+                {
+                    "name": "DAMAGE_DETECTOR",
+                    "value": "huggingface"
+                }
+            ],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "secrets": [
+                {
+                    "name": "OPENAI_API_KEY",
+                    "valueFrom": "{{OPENAI_SECRET_ARN}}"
+                },
+                {
+                    "name": "DATABASE_URL",
+                    "valueFrom": "{{DATABASE_URL_SECRET_ARN}}"
+                }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/claimlens-backend",
+                    "awslogs-region": "{{REGION}}",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "systemControls": []
+        }
+    ]
+}

@@ -8,16 +8,35 @@ results are flagged so the processor knows to look closer.
 
 > From a week of back-and-forth to an estimate in seconds, with a human in the loop.
 
+## Try the demo
+
+Running live on AWS. There are two portals, start with the owner flow, then
+switch to the processor view to review what you filed.
+
+| | Portal | What to do |
+|---|---|---|
+| 🚗 | **[Owner — file a claim](http://claimlens-alb-192713703.us-east-1.elb.amazonaws.com/owner)** | Upload a photo of a damaged car and get an itemized estimate in seconds |
+| 🧾 | **[Processor — review queue](http://claimlens-alb-192713703.us-east-1.elb.amazonaws.com/processor)** | See pending claims, then approve, edit, or decline individual line items |
+
+No sign-up required. Any photo of a damaged car works, or grab one of the
+[sample images](backend/tests/fixtures/images) from this repo.
+
+> **Demo, not production.** It's HTTP-only with no authentication, so please
+> don't upload anything sensitive. Each upload makes real `gpt-4o` calls.
+> See [Gaps and risks](docs/DEPLOYMENT.md#gaps-and-risks).
+
 ![ClaimLens architecture](docs/claimlens_flow_ai.png)
 
 ---
 
 ## Table of contents
 
+- [Try the demo](#try-the-demo)
 - [Setup instructions](#setup-instructions)
 - [Architecture overview](#architecture-overview)
 - [Why these tools](#why-these-tools)
 - [Screens](#screens)
+- [Deployment](#deployment)
 - [What's next](#whats-next)
 - [Evaluation](#evaluation)
 
@@ -108,7 +127,7 @@ GPT-4o as the analysis engine.
 | Analysis | OpenAI GPT-4o | One vision call (vehicle + damage), one cost call (pricing) |
 | Database | PostgreSQL + SQLAlchemy / Alembic | Claims, damage line items, review state |
 | Storage | Local filesystem or AWS S3 | Uploaded claim images |
-| Packaging | Docker / Docker Compose | Local dev and AWS ECS deployment |
+| Packaging | Docker / Docker Compose | Local dev; same images run on AWS ECS Fargate |
 
 ### How data flows through it
 
@@ -158,7 +177,9 @@ multi-agent `ANALYSIS_MODE=agents` path exist as future extension points.
   in the database or a container's ephemeral disk; local storage keeps dev
   friction low while S3 is the production target.
 - **Docker Compose → AWS ECS** — one command spins up the whole stack locally,
-  and the same containers deploy to ECS, keeping dev and prod consistent.
+  and the same containers run in production on ECS Fargate, keeping dev and prod
+  consistent. See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for the live
+  architecture.
 
 ---
 
@@ -178,6 +199,32 @@ severity-tagged repair estimate.
 the vehicle, estimate, and number of damage areas at a glance.
 
 ![Claim queue](docs/UX-1.png)
+
+---
+
+## Deployment
+
+ClaimLens runs on AWS: **ECS Fargate** behind an **Application Load Balancer**,
+with **RDS Postgres** and **S3** for claim images. Secrets come from AWS Secrets
+Manager at task start. Live now — [owner portal](http://claimlens-alb-192713703.us-east-1.elb.amazonaws.com/owner)
+· [processor portal](http://claimlens-alb-192713703.us-east-1.elb.amazonaws.com/processor).
+
+| Layer | Resource |
+|---|---|
+| Compute | ECS Fargate services `claimlens-backend` (:8000), `claimlens-frontend` (:8080) |
+| Routing | ALB `claimlens-alb` — `/api/*` and `/uploads/*` to backend, everything else to frontend |
+| Database | RDS Postgres 16 (`claimlens-db`, not publicly accessible) |
+| Images | `s3://claimlens-uploads-<account-id>` (`STORAGE_BACKEND=s3`) |
+| Registry | ECR `claimlens-backend`, `claimlens-frontend` |
+
+The ECS task definitions are checked in at [`infra/ecs/`](infra/ecs/). Full
+architecture, redeploy commands, and known gaps are in
+[`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
+
+> **Demo deployment, not production-hardened.** The ALB is HTTP-only (no TLS)
+> and the API has no authentication yet, so claim data is publicly readable and
+> uploads are unauthenticated. See
+> [Gaps and risks](docs/DEPLOYMENT.md#gaps-and-risks).
 
 ---
 
