@@ -39,6 +39,7 @@ No sign-up required. Any photo of a damaged car works, or grab one of the
 - [Deployment](#deployment)
 - [What's next](#whats-next)
 - [Evaluation](#evaluation)
+- [Model evaluation](#model-evaluation)
 
 ---
 
@@ -104,11 +105,56 @@ All backend config is read from environment variables (see
 | `OPENAI_API_KEY` | Key used for both vision and cost calls | _(required)_ |
 | `LLM_PROVIDER` | `openai` (GPT-4o) or `bedrock` (Qwen, future) | `openai` |
 | `OPENAI_VISION_MODEL` / `OPENAI_COST_MODEL` | Models for each step | `gpt-4o` |
+| `VISION_LLM_PROVIDER` / `COST_LLM_PROVIDER` | Per-step provider override: `auto`, `openai`, `bedrock`, `fireworks` | `auto` |
 | `STORAGE_BACKEND` | `local` (uploads/ folder) or `s3` | `local` |
 | `DATABASE_URL` | PostgreSQL connection string | local Postgres |
 | `REVIEW_CONFIDENCE_THRESHOLD` | Below this, a claim is flagged for human review | `0.6` |
 
 Secrets live only in `backend/.env`, which is git-ignored.
+
+### Running on open weights via Fireworks AI
+
+Each step picks its provider independently, so you can move either one (or
+both) off GPT-4o. Fireworks serves an OpenAI-compatible API, so this needs no
+extra Python dependency — only a key from
+[Fireworks](https://app.fireworks.ai/settings/users/api-keys).
+
+```bash
+# backend/.env — damage detection on Qwen 3.8 Max, pricing on GPT-OSS
+VISION_LLM_PROVIDER=fireworks
+COST_LLM_PROVIDER=fireworks
+FIREWORKS_API_KEY=fw-...
+```
+
+| Step | Model | Tokens | Latency |
+|---|---|---|---|
+| Vision / damage detection | `qwen3p8-max` | 8192 | ~30–50s |
+| Cost estimation | [`gpt-oss-120b`](https://fireworks.ai/models/fireworks/gpt-oss-120b) | 2048 | ~3s |
+
+Measured end-to-end on the [sample images](backend/tests/fixtures/images):
+`qwen3p8-max` identified a pearl-white Toyota and four damage line items
+(including a door-to-quarter-panel gap misalignment) at 0.9 confidence, which
+`gpt-oss-120b` priced at $1,300.
+
+Four things to know before switching:
+
+- **The vision model must be multimodal.** GPT-OSS is text-only — fine for
+  pricing, but pointing `FIREWORKS_VISION_MODEL` at it will fail. Verified
+  working vision models on serverless: `qwen3p8-max`, `qwen3p8-2p4t-a95b`, and
+  `kimi-k3`. `glm-5p3` and `nemotron-3-ultra-nvfp4` reject image input.
+- **Reasoning models need a large token budget.** `qwen3p8-max` spends its
+  budget thinking before it answers: at 2048 and 4096 it never reaches the JSON
+  and the vision step fails outright. 8192 works. `kimi-k3` manages on 4096.
+- **Open weights are slower.** The vision call takes ~30–50s against GPT-4o's
+  few seconds, which is slow for an interactive upload. `kimi-k3` returns in
+  ~6s and is the better choice if latency matters more than Qwen's extra detail.
+- **Fireworks caps base64 images at 10MB**, so oversized uploads are rejected
+  locally rather than failing remotely.
+
+`qwen3p8-flash-next-nvfp4` is **not** on serverless (404). Using it requires an
+on-demand GPU deployment, then referencing it as `<model-id>#<deployment-name>`.
+
+See [`backend/.env.example`](backend/.env.example) for every knob.
 
 ---
 
@@ -124,7 +170,7 @@ GPT-4o as the analysis engine.
 |---|---|---|
 | Frontend | React + Vite | Owner upload flow + processor review queue |
 | API | FastAPI (Python) | Claim lifecycle, analysis orchestration, persistence |
-| Analysis | OpenAI GPT-4o | One vision call (vehicle + damage), one cost call (pricing) |
+| Analysis | OpenAI GPT-4o (swappable: Bedrock, Fireworks open weights) | One vision call (vehicle + damage), one cost call (pricing) |
 | Database | PostgreSQL + SQLAlchemy / Alembic | Claims, damage line items, review state |
 | Storage | Local filesystem or AWS S3 | Uploaded claim images |
 | Packaging | Docker / Docker Compose | Local dev; same images run on AWS ECS Fargate |
@@ -155,6 +201,10 @@ The analysis is **LLM-only** by default: a single vision call does both vehicle
 identification and damage detection, so there is no separate CV model to host.
 A pluggable `DAMAGE_DETECTOR` (HuggingFace / fine-tuned YOLOv8) and an optional
 multi-agent `ANALYSIS_MODE=agents` path exist as future extension points.
+
+Steps 3 and 4 each choose their own provider, so the vision and cost models can
+come from different vendors — GPT-4o, Qwen on Bedrock, or open weights on
+Fireworks. See [Running on open weights](#running-on-open-weights-via-fireworks-ai).
 
 ---
 
@@ -283,7 +333,54 @@ python eval/damage_detection/run.py       # score detection vs CarDD ground trut
 python eval/cost_estimation/compare.py    # compare cost estimates vs reference
 ```
 
+Both harnesses call the production code path, so they exercise whichever
+provider is configured. That means you can benchmark the open-weight models
+against the same ground truth and the same Claude cost reference:
+
+```bash
+# damage detection on Qwen 3.8 Max instead of GPT-4o
+VISION_LLM_PROVIDER=fireworks python eval/damage_detection/run.py
+
+# cost estimation on GPT-OSS, scored against the Claude benchmark
+COST_LLM_PROVIDER=fireworks python eval/cost_estimation/run_openai.py
+python eval/cost_estimation/compare.py --results reports/fireworks_cost_results.json \
+    --out-json reports/cost_comparison_fireworks.json \
+    --out-md   reports/cost_benchmark_report_fireworks.md
+```
+
+The cost runner names its output after the provider, so runs don't overwrite
+each other, and the generated reports record which model produced them.
+
 Ground truth and inputs are committed under `backend/data/`, so you can run the
 scoring steps directly. Full setup, the complete pipeline order, and what each
 script reads/writes are documented in
 [`backend/eval/README.md`](backend/eval/README.md).
+
+---
+
+## Model evaluation
+
+GPT-4o and Qwen tie on damage detection (F1 0.716 vs 0.713), but Qwen is 13×
+slower and 5× dearer because it emits 23× more reasoning tokens. GPT-OSS prices
+claims 12× cheaper than GPT-4o, with agreement inside run-to-run noise. Best
+mix: GPT-4o vision + GPT-OSS cost.
+
+| Step | Model | Accuracy | Latency | Cost / 1k claims |
+|---|---|---|---|---|
+| Damage detection | OpenAI `gpt-4o` | **F1 0.716** | **2.9s** | $4.16 |
+| Damage detection | Fireworks `qwen3p8-max` | F1 0.713 | 37.1s | $20.34 |
+| Cost estimation | OpenAI `gpt-4o` | MAE $138 · MAPE 25.5% | **1.4s** | $1.44 |
+| Cost estimation | Fireworks `gpt-oss-120b` | MAE $147 · MAPE 29.4% | 2.0s | **$0.12** |
+| Cost estimation | Fireworks `qwen3p8-max` | MAE $125 · MAPE 21.4% | 2.5s | $2.56 |
+
+<sub>Measured 2026-11-09 over 125 live API calls (50 vision, 75 cost), 0
+failures. **Damage
+detection** accuracy is micro-F1 against CarDD human labels (25 images);
+**cost estimation** accuracy is agreement with the committed Claude reference
+(52 items) — CarDD has no repair-price labels, so it is not accuracy against
+real prices. Cost is computed from each response's `usage` object at list rates
+(`gpt-4o` $2.50/$10.00, `qwen3p8-max` $2.00/$6.00, `gpt-oss-120b` $0.15/$0.60
+per 1M in/out). Fireworks models ran at `reasoning_effort=low`. The cost-step
+differences are **within run-to-run noise**: a second `gpt-4o` run on identical
+inputs scored MAE $123 / MAPE 22.8%, so treat the three as tied on cost
+accuracy.</sub>

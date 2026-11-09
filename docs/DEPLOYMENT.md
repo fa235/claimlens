@@ -88,6 +88,7 @@ definition:
 |---|---|
 | `LLM_PROVIDER` | `openai` |
 | `OPENAI_VISION_MODEL` / `OPENAI_COST_MODEL` | `gpt-4o` |
+| `VISION_LLM_PROVIDER` / `COST_LLM_PROVIDER` | `auto` (set to `fireworks` to run a step on open weights) |
 | `STORAGE_BACKEND` | `s3` |
 | `S3_BUCKET` | `claimlens-uploads-<account-id>` |
 | `DAMAGE_DETECTOR` | `huggingface` |
@@ -104,6 +105,10 @@ task definition):
 |---|---|
 | `claimlens/openai-api-key` | `OPENAI_API_KEY` |
 | `claimlens/database-url` | `DATABASE_URL` |
+
+If you move a step to Fireworks (`VISION_LLM_PROVIDER` / `COST_LLM_PROVIDER` =
+`fireworks`), add a `claimlens/fireworks-api-key` secret injected as
+`FIREWORKS_API_KEY` the same way. Don't put the key in the task definition.
 
 ### Network isolation
 

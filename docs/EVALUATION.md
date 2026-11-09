@@ -264,12 +264,29 @@ export CARDD_ROOT=~/Downloads/CarDD_release
 python eval/damage_detection/build_gt.py # -> data/eval_cardd_gt.json
 python eval/damage_detection/run.py      # -> reports/eval_cardd_results.json, reports/eval_cardd_report.md
 python eval/cost_estimation/build_inputs.py # -> data/cost_inputs.json
-python eval/cost_estimation/run_openai.py   # -> reports/openai_cost_results.json
+python eval/cost_estimation/run_openai.py   # -> reports/<provider>_cost_results.json
 python eval/cost_estimation/compare.py      # -> reports/cost_comparison.json, reports/cost_benchmark_report.md
 ```
 
 `data/eval_cardd_gt.json` is committed, so `build_gt.py` only needs re-running to
 change the image sample.
+
+Both harnesses invoke the production code path, so they measure whichever
+provider is configured rather than GPT-4o specifically. To score the
+open-weight models on Fireworks instead, set the per-step override and a
+`FIREWORKS_API_KEY`:
+
+```bash
+VISION_LLM_PROVIDER=fireworks python eval/damage_detection/run.py
+COST_LLM_PROVIDER=fireworks   python eval/cost_estimation/run_openai.py
+python eval/cost_estimation/compare.py --results reports/fireworks_cost_results.json \
+    --out-json reports/cost_comparison_fireworks.json \
+    --out-md   reports/cost_benchmark_report_fireworks.md
+```
+
+The cost runner names its output after the provider so runs don't overwrite each
+other, and both reports record the provider and model id they actually used.
+The headline numbers above were produced with `gpt-4o` on both steps.
 
 | File | Purpose |
 |---|---|
@@ -279,5 +296,5 @@ change the image sample.
 | `reports/eval_cardd_results.json` / `reports/eval_cardd_report.md` | Detection results + report |
 | `eval/cost_estimation/build_inputs.py` / `data/cost_inputs.json` | Build shared cost inputs |
 | `data/claude_cost_benchmark.json` | Claude reference cost estimates |
-| `eval/cost_estimation/run_openai.py` / `reports/openai_cost_results.json` | OpenAI cost run |
+| `eval/cost_estimation/run_openai.py` / `reports/<provider>_cost_results.json` | Cost run for the configured provider |
 | `eval/cost_estimation/compare.py` / `reports/cost_comparison.json` / `reports/cost_benchmark_report.md` | Cost comparison |
