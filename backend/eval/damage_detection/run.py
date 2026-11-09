@@ -107,9 +107,10 @@ def predicted_categories(analysis: dict):
     return preds, mapping_detail
 
 
-async def run():
+async def run(results_path=RESULTS_JSON, report_path=REPORT_MD):
     gt_rows = json.load(open(GT_PATH))
-    print(f"Provider: {settings.llm_provider} | vision model: {settings.openai_vision_model}")
+    print(f"Provider: {settings.effective_vision_provider} "
+          f"| vision model: {settings.vision_model_name}")
     print(f"Evaluating {len(gt_rows)} images...\n")
 
     per_image = []
@@ -186,8 +187,8 @@ async def run():
 
     summary = {
         "num_images": n,
-        "provider": settings.llm_provider,
-        "vision_model": settings.openai_vision_model,
+        "provider": settings.effective_vision_provider,
+        "vision_model": settings.vision_model_name,
         "micro": {"tp": TP, "fp": FP, "fn": FN,
                   "precision": micro_p, "recall": micro_r, "f1": micro_f},
         "exact_set_match_rate": exact_matches / n if n else 0.0,
@@ -196,15 +197,15 @@ async def run():
     }
 
     json.dump({"summary": summary, "per_image": per_image},
-              open(RESULTS_JSON, "w"), indent=2)
+              open(results_path, "w"), indent=2)
 
-    write_report(summary, per_image)
+    write_report(summary, per_image, report_path)
     print("\n=== SUMMARY ===")
     print(json.dumps(summary, indent=2))
-    print(f"\nSaved: {RESULTS_JSON}\nSaved: {REPORT_MD}")
+    print(f"\nSaved: {results_path}\nSaved: {report_path}")
 
 
-def write_report(summary, per_image):
+def write_report(summary, per_image, report_path=REPORT_MD):
     L = []
     L.append("# ClaimLens Evaluation on CarDD (COCO val2017)\n")
     L.append(f"- Images evaluated: **{summary['num_images']}**")
@@ -243,8 +244,16 @@ def write_report(summary, per_image):
         L.append(f"| {r['file_name']} | {gt} | {pr}{note} | {mark} |")
     L.append("")
 
-    open(REPORT_MD, "w").write("\n".join(L))
+    open(report_path, "w").write("\n".join(L))
 
 
 if __name__ == "__main__":
-    asyncio.run(run())
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out", default=RESULTS_JSON,
+                        help="Results JSON path (default: reports/eval_cardd_results.json)")
+    parser.add_argument("--report", default=REPORT_MD,
+                        help="Markdown report path (default: reports/eval_cardd_report.md)")
+    args = parser.parse_args()
+    asyncio.run(run(args.out, args.report))

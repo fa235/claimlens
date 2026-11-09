@@ -1,7 +1,20 @@
 """
-Run the ClaimLens OpenAI cost estimator (app.services.cost_estimator) on the
-same damage items the Claude benchmark used. Writes openai_cost_results.json.
+Run the ClaimLens cost estimator (app.services.cost_estimator) on the same
+damage items the Claude benchmark used.
+
+Whichever provider the app is configured for is the one that gets exercised —
+this script calls the production code path, it does not talk to any SDK itself.
+
+  # GPT-4o (default)                 -> reports/openai_cost_results.json
+  python eval/cost_estimation/run_openai.py
+
+  # GPT-OSS on Fireworks            -> reports/fireworks_cost_results.json
+  COST_LLM_PROVIDER=fireworks python eval/cost_estimation/run_openai.py
+
+The output file is named after the provider so runs don't overwrite each other.
+Pass --out to choose it explicitly.
 """
+import argparse
 import asyncio
 import json
 import os
@@ -15,12 +28,25 @@ from app.services.cost_estimator import estimate_cost  # noqa: E402
 from app.core.config import settings  # noqa: E402
 
 INPUTS = os.path.join(BACKEND_ROOT, "data", "cost_inputs.json")
-OUT = os.path.join(BACKEND_ROOT, "reports", "openai_cost_results.json")
+
+# Per-provider default output. "openai" keeps the original filename so the
+# committed reports and compare.py defaults still line up.
+_DEFAULT_OUT = {
+    "openai": "openai_cost_results.json",
+    "fireworks": "fireworks_cost_results.json",
+    "bedrock": "bedrock_cost_results.json",
+}
 
 
-async def run():
+def _default_out(provider: str) -> str:
+    name = _DEFAULT_OUT.get(provider, f"{provider}_cost_results.json")
+    return os.path.join(BACKEND_ROOT, "reports", name)
+
+
+async def run(out_path: str):
     rows = json.load(open(INPUTS))
-    print(f"Provider: {settings.llm_provider} | cost model: {settings.openai_cost_model}")
+    provider = settings.effective_cost_provider
+    print(f"Provider: {provider} | cost model: {settings.cost_model_name}")
     print(f"Estimating costs for {len(rows)} images...\n")
 
     per_image = []
@@ -46,9 +72,20 @@ async def run():
         print(f"[{i:2}/{len(rows)}] {row['file_name']}  costs={costs}"
               + (f"  ({error})" if error else ""))
 
-    json.dump({"per_image": per_image}, open(OUT, "w"), indent=2)
-    print("\nsaved to", OUT)
+    failed = sum(1 for p in per_image if p["error"])
+    json.dump(
+        {"provider": provider, "model": settings.cost_model_name, "per_image": per_image},
+        open(out_path, "w"), indent=2,
+    )
+    if failed:
+        print(f"\nWARNING: {failed}/{len(rows)} image(s) failed — see the "
+              f'"error" fields. Those items are excluded from the comparison.')
+    print("\nsaved to", out_path)
 
 
 if __name__ == "__main__":
-    asyncio.run(run())
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out", default=None,
+                        help="Output JSON path (default: named after the provider)")
+    args = parser.parse_args()
+    asyncio.run(run(args.out or _default_out(settings.effective_cost_provider)))

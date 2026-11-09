@@ -81,10 +81,27 @@ detection run.
 
 ```bash
 python eval/cost_estimation/build_inputs.py   # reports/eval_cardd_results.json -> data/cost_inputs.json
-python eval/cost_estimation/run_openai.py     # data/cost_inputs.json           -> reports/openai_cost_results.json
-python eval/cost_estimation/compare.py        # openai + claude reference       -> reports/cost_comparison.json
+python eval/cost_estimation/run_openai.py     # data/cost_inputs.json           -> reports/<provider>_cost_results.json
+python eval/cost_estimation/compare.py        # candidate + claude reference    -> reports/cost_comparison.json
                                               #                                    reports/cost_benchmark_report.md
 ```
+
+`run_openai.py` runs whichever provider the app is configured for — it calls
+`app.services.cost_estimator`, not an SDK — and names its output after that
+provider (`openai_cost_results.json`, `fireworks_cost_results.json`, ...), so
+runs don't clobber each other. Point `compare.py --results` at the file you
+want scored:
+
+```bash
+COST_LLM_PROVIDER=fireworks python eval/cost_estimation/run_openai.py
+python eval/cost_estimation/compare.py --results reports/fireworks_cost_results.json \
+    --out-json reports/cost_comparison_fireworks.json \
+    --out-md   reports/cost_benchmark_report_fireworks.md
+```
+
+The same applies to `damage_detection/run.py`: set `VISION_LLM_PROVIDER` to
+score a different vision model. The report records the provider and model it
+actually used.
 
 `compare.py` treats the committed `data/claude_cost_benchmark.json` as the
 reference. It measures OpenAI-vs-Claude **agreement** (MAE, MAPE, correlation),
