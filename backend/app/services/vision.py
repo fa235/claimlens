@@ -2,9 +2,13 @@
 Vision service — identifies car color, model, license plate, and visible
 damage from an image using a single LLM vision call.
 
-Provider selection (set LLM_PROVIDER in .env):
-  bedrock  → Qwen-VL via AWS Bedrock (needs on-demand quota)
-  openai   → GPT-4o Vision
+Provider selection (VISION_LLM_PROVIDER in .env, falls back to LLM_PROVIDER):
+  bedrock    → Qwen-VL via AWS Bedrock (needs on-demand quota)
+  openai     → GPT-4o Vision
+  fireworks  → a multimodal model on Fireworks AI, default Qwen3.8-Flash-Next
+
+The model MUST be vision-capable. Pointing this at a text-only model (e.g.
+GPT-OSS, which the cost step can use) will not work.
 
 This is the ONLY damage source in the pipeline — ClaimLens no longer runs a
 separate object-detection model (cardamage / YOLO). The LLM both describes the
@@ -25,9 +29,19 @@ Returns:
 import asyncio
 import base64
 import json
-import re
+import logging
 
 from app.core.config import settings
+from app.services.llm_json import extract_json_object, message_text
+
+logger = logging.getLogger(__name__)
+
+# Fireworks caps total base64 image payload at 10MB per request.
+_FIREWORKS_B64_LIMIT = 10 * 1024 * 1024
+
+
+class VisionParseError(RuntimeError):
+    """The vision model replied, but no appraisal could be read from it."""
 
 
 # ── Prompt (same for both providers) ─────────────────────────────────────────
@@ -89,12 +103,23 @@ def _coerce_damages(raw_damages) -> list:
 
 
 def _parse_response(raw: str) -> dict:
-    """Strips markdown fences and parses JSON. Returns fallback on failure."""
-    raw = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw, flags=re.MULTILINE).strip()
-    try:
-        result = json.loads(raw)
-    except json.JSONDecodeError:
-        result = {}
+    """
+    Extracts the JSON appraisal from the model reply. Returns the "Unknown"
+    fallback on failure.
+
+    Tolerates markdown fences, <think> blocks, and prose around the payload,
+    which open-weight and reasoning models on Fireworks routinely add.
+    """
+    result = extract_json_object(raw, required_key="damage_detected")
+    if not result:
+        # Do NOT fall through to the "Unknown / no damage" defaults here. That
+        # produced a $0 claim marked "No damage detected" with no review flag —
+        # indistinguishable from a genuine undamaged car. Observed with
+        # reasoning VLMs that exhaust their token budget mid-thought.
+        snippet = " ".join((raw or "").split())[:300] or "<empty response>"
+        raise VisionParseError(
+            f"Vision model returned no parseable JSON. Raw reply: {snippet}"
+        )
 
     # Normalize license plate: treat null / whitespace as "not detected"
     plate = (result.get("license_plate") or "").strip()
@@ -194,23 +219,34 @@ async def _identify_via_bedrock(image_bytes: bytes, media_type: str) -> dict:
     return _parse_response(raw)
 
 
-# ── OpenAI (GPT-4o Vision) ────────────────────────────────────────────────────
+# ── OpenAI-compatible vision (OpenAI, Fireworks) ──────────────────────────────
 
-async def _identify_via_openai(image_bytes: bytes, media_type: str) -> dict:
-    """Calls GPT-4o Vision via the OpenAI chat.completions API."""
+async def _identify_via_openai_compatible(
+    image_bytes: bytes,
+    media_type: str,
+    *,
+    api_key: str,
+    model: str,
+    base_url: str | None = None,
+    max_tokens: int = 500,
+    json_mode: bool = False,
+    extra_body: dict | None = None,
+) -> dict:
+    """
+    Single implementation for any provider speaking the OpenAI vision API.
+
+    Fireworks accepts the identical `image_url` data-URL payload as OpenAI, so
+    only the base URL, key, model and token budget differ.
+    """
     from openai import AsyncOpenAI
 
-    if not settings.openai_api_key:
-        raise ValueError("OPENAI_API_KEY is not set.")
-
-    client   = AsyncOpenAI(api_key=settings.openai_api_key)
-    model    = settings.openai_vision_model
+    client   = AsyncOpenAI(api_key=api_key, base_url=base_url)
     b64      = base64.b64encode(image_bytes).decode("utf-8")
     data_url = f"data:{media_type};base64,{b64}"
 
-    response = await client.chat.completions.create(
-        model=model,
-        messages=[
+    kwargs = {
+        "model": model,
+        "messages": [
             {"role": "system", "content": _SYSTEM_PROMPT},
             {
                 "role": "user",
@@ -220,12 +256,81 @@ async def _identify_via_openai(image_bytes: bytes, media_type: str) -> dict:
                 ],
             },
         ],
-        max_tokens=500,
-        temperature=0,
+        "max_tokens": max_tokens,
+        "temperature": 0,
+    }
+    if json_mode:
+        kwargs["response_format"] = {"type": "json_object"}
+    if extra_body:
+        kwargs["extra_body"] = extra_body
+
+    response = await client.chat.completions.create(**kwargs)
+
+    finish_reason = getattr(response.choices[0], "finish_reason", None)
+    raw = message_text(response)
+    if not raw:
+        raise ValueError(
+            f"{model} returned an empty reply (finish_reason={finish_reason}). "
+            "If this is a reasoning model, raise its max-tokens budget."
+        )
+    if finish_reason == "length":
+        logger.warning(
+            "%s hit the token limit (max_tokens=%s) — the appraisal may be truncated.",
+            model, max_tokens,
+        )
+    return _parse_response(raw)
+
+
+# ── OpenAI (GPT-4o Vision) ────────────────────────────────────────────────────
+
+async def _identify_via_openai(image_bytes: bytes, media_type: str) -> dict:
+    """Calls GPT-4o Vision via the OpenAI chat.completions API."""
+    if not settings.openai_api_key:
+        raise ValueError("OPENAI_API_KEY is not set.")
+
+    return await _identify_via_openai_compatible(
+        image_bytes, media_type,
+        api_key=settings.openai_api_key,
+        model=settings.openai_vision_model,
     )
 
-    raw = response.choices[0].message.content.strip()
-    return _parse_response(raw)
+
+# ── Fireworks AI (Qwen3.8-Flash-Next and other VLMs) ──────────────────────────
+
+async def _identify_via_fireworks(image_bytes: bytes, media_type: str) -> dict:
+    """
+    Calls a multimodal model on Fireworks AI — by default Qwen3.8-Flash-Next,
+    an open-weight vision MoE, in place of GPT-4o.
+
+    Fireworks' vision API mirrors OpenAI's, so this reuses the shared path.
+    Two provider-specific details: a 10MB cap on the base64 payload, and the
+    larger token budget a reasoning-capable model needs.
+    """
+    if not settings.fireworks_api_key:
+        raise ValueError("FIREWORKS_API_KEY is not set.")
+
+    # Base64 inflates by ~4/3. Check before spending a request on a 413.
+    encoded_size = -(-len(image_bytes) // 3) * 4
+    if encoded_size > _FIREWORKS_B64_LIMIT:
+        raise ValueError(
+            f"Image is too large for Fireworks: ~{encoded_size / 1e6:.1f}MB "
+            f"base64-encoded, limit is {_FIREWORKS_B64_LIMIT / 1e6:.0f}MB. "
+            "Downscale the image before uploading."
+        )
+
+    extra_body = {}
+    if settings.fireworks_reasoning_effort != "none":
+        extra_body["reasoning_effort"] = settings.fireworks_reasoning_effort
+
+    return await _identify_via_openai_compatible(
+        image_bytes, media_type,
+        api_key=settings.fireworks_api_key,
+        base_url=settings.fireworks_base_url,
+        model=settings.fireworks_vision_model,
+        max_tokens=settings.fireworks_vision_max_tokens,
+        json_mode=settings.fireworks_json_mode,
+        extra_body=extra_body or None,
+    )
 
 
 # ── Public interface ──────────────────────────────────────────────────────────
@@ -234,9 +339,10 @@ async def identify_vehicle(image_bytes: bytes, media_type: str = "image/jpeg") -
     """
     Identifies the vehicle and all visible damage from image bytes.
 
-    Routing by LLM_PROVIDER:
-      bedrock → Qwen-VL on Bedrock
-      openai  → GPT-4o Vision
+    Routing by VISION_LLM_PROVIDER (falls back to LLM_PROVIDER):
+      bedrock   → Qwen-VL on Bedrock
+      openai    → GPT-4o Vision
+      fireworks → Qwen3.8-Flash-Next (or another VLM) on Fireworks AI
 
     Args:
         image_bytes: Raw image file bytes.
@@ -245,9 +351,21 @@ async def identify_vehicle(image_bytes: bytes, media_type: str = "image/jpeg") -
     Returns:
         dict with color, model, license_plate, damage_detected,
         damage_description, damages (list), and damage_confidence.
-    """
-    if settings.llm_provider == "bedrock":
-        return await _identify_via_bedrock(image_bytes, media_type)
 
-    # openai
-    return await _identify_via_openai(image_bytes, media_type)
+    Raises:
+        ValueError: provider unknown, credentials missing, or the model
+            returned nothing usable.
+    """
+    provider = settings.effective_vision_provider
+    handlers = {
+        "bedrock": _identify_via_bedrock,
+        "openai": _identify_via_openai,
+        "fireworks": _identify_via_fireworks,
+    }
+    handler = handlers.get(provider)
+    if handler is None:
+        raise ValueError(
+            f"Unknown vision provider {provider!r}. "
+            f"Expected one of: {', '.join(sorted(handlers))}."
+        )
+    return await handler(image_bytes, media_type)

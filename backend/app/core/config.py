@@ -19,9 +19,30 @@ class Settings(BaseSettings):
     debug: bool = False
 
     # ── LLM provider ─────────────────────────────────────────
+    # Applies to BOTH the vision step and the cost step.
     # "bedrock" — Qwen via AWS Bedrock (needs on-demand quota)
     # "openai"  — GPT-4o for both vision and text
     llm_provider: Literal["bedrock", "openai"] = "bedrock"
+
+    # ── Vision-step provider override ────────────────────────
+    # "auto"      — follow llm_provider (default, previous behaviour)
+    # "bedrock"   — Qwen-VL on Bedrock
+    # "openai"    — openai_vision_model (GPT-4o)
+    # "fireworks" — a multimodal model on Fireworks AI, e.g. Qwen3.8-Flash-Next
+    # The model MUST be vision-capable; a text-only model (GPT-OSS) will fail
+    # or hallucinate here.
+    vision_llm_provider: Literal["auto", "bedrock", "openai", "fireworks"] = "auto"
+
+    # ── Cost-step provider override ──────────────────────────
+    # The cost estimator is text-only, so it can run on a different (cheaper)
+    # model than the vision step.
+    # "auto"      — follow llm_provider (default, previous behaviour)
+    # "bedrock"   — Qwen3-32B on Bedrock
+    # "openai"    — openai_cost_model
+    # "fireworks" — an open-weight model on Fireworks AI (e.g. GPT-OSS)
+    # Not added to llm_provider itself because Fireworks serves GPT-OSS as a
+    # text-only model — it cannot do the vision step.
+    cost_llm_provider: Literal["auto", "bedrock", "openai", "fireworks"] = "auto"
 
     # ── AWS Bedrock — Qwen models ────────────────────────────
     # Both are native Bedrock models — no import needed.
@@ -36,6 +57,39 @@ class Settings(BaseSettings):
     openai_api_key: str = ""
     openai_vision_model: str = "gpt-4o"
     openai_cost_model: str = "gpt-4o"
+
+    # ── Fireworks AI — GPT-OSS for cost estimation ────────────
+    # Only required when cost_llm_provider=fireworks.
+    # Fireworks exposes an OpenAI-compatible /chat/completions endpoint, so the
+    # existing `openai` SDK is reused with a different base_url — no new
+    # dependency.
+    fireworks_api_key: str = ""
+    fireworks_base_url: str = "https://api.fireworks.ai/inference/v1"
+    fireworks_cost_model: str = "accounts/fireworks/models/gpt-oss-120b"
+
+    # Vision model for the damage-detection step. Must be multimodal, so unlike
+    # the cost step this cannot use GPT-OSS.
+    # qwen3p8-max is available on serverless and verified on car-damage photos.
+    # qwen3p8-flash-next-nvfp4 is NOT on serverless (404) — it needs an
+    # on-demand deployment, referenced as "<model-id>#<deployment-name>".
+    fireworks_vision_model: str = "accounts/fireworks/models/qwen3p8-max"
+
+    # Reasoning tokens count against this. Measured on a real damage photo,
+    # qwen3p8-max emits no JSON at 2048 or 4096 and needs 8192; kimi-k3 works
+    # at 4096. Too low fails the vision step outright.
+    fireworks_vision_max_tokens: int = 8192
+
+    # GPT-OSS is a reasoning model: it spends tokens thinking before it answers.
+    # "none" omits the parameter entirely (for non-reasoning models).
+    fireworks_reasoning_effort: Literal["none", "low", "medium", "high"] = "low"
+
+    # Reasoning tokens count against max_tokens, so the cost call needs far more
+    # headroom than the 500 that suffices for GPT-4o. Too low truncates the JSON.
+    fireworks_cost_max_tokens: int = 2048
+
+    # Ask Fireworks to constrain decoding to valid JSON. Set false if the model
+    # or deployment rejects response_format.
+    fireworks_json_mode: bool = True
 
     # ── AWS credentials (shared by Bedrock + S3) ──────────────
     aws_access_key_id: str = ""
@@ -98,6 +152,44 @@ class Settings(BaseSettings):
     @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+
+    @property
+    def effective_vision_provider(self) -> str:
+        """
+        Provider the vision step should use: vision_llm_provider when set
+        explicitly, otherwise whatever llm_provider says.
+        """
+        if self.vision_llm_provider == "auto":
+            return self.llm_provider
+        return self.vision_llm_provider
+
+    @property
+    def vision_model_name(self) -> str:
+        """Model id the vision step will call, for logs and eval banners."""
+        return {
+            "bedrock": self.bedrock_vision_model_id,
+            "openai": self.openai_vision_model,
+            "fireworks": self.fireworks_vision_model,
+        }.get(self.effective_vision_provider, "unknown")
+
+    @property
+    def effective_cost_provider(self) -> str:
+        """
+        Provider the cost estimator should use: cost_llm_provider when set
+        explicitly, otherwise whatever llm_provider says.
+        """
+        if self.cost_llm_provider == "auto":
+            return self.llm_provider
+        return self.cost_llm_provider
+
+    @property
+    def cost_model_name(self) -> str:
+        """Model id the cost estimator will call, for logs and eval banners."""
+        return {
+            "bedrock": self.bedrock_cost_model_id,
+            "openai": self.openai_cost_model,
+            "fireworks": self.fireworks_cost_model,
+        }.get(self.effective_cost_provider, "unknown")
 
 
 # Singleton — import this everywhere

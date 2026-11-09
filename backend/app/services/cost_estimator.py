@@ -2,9 +2,13 @@
 Cost estimation service — estimates a PER-ITEM repair cost for each detected
 damage, using an LLM.
 
-Provider selection (set LLM_PROVIDER in .env):
-  bedrock  → Qwen3-32B via AWS Bedrock (needs on-demand quota)
-  openai   → GPT-4o
+Provider selection (COST_LLM_PROVIDER in .env, falls back to LLM_PROVIDER):
+  bedrock    → Qwen3-32B via AWS Bedrock (needs on-demand quota)
+  openai     → GPT-4o
+  fireworks  → GPT-OSS (or any open-weight text model) on Fireworks AI
+
+Because this step is text-only, COST_LLM_PROVIDER can differ from the provider
+used for the vision step — e.g. GPT-4o for vision, GPT-OSS on Fireworks here.
 
 Returns:
   {
@@ -20,12 +24,20 @@ them, excluding any items a processor later declines.
 
 import asyncio
 import json
+import logging
 import re
 
 from app.core.config import settings
+from app.services.llm_json import extract_json_object, message_text
+
+logger = logging.getLogger(__name__)
 
 
-# ── Prompt (same for both providers) ─────────────────────────────────────────
+class CostEstimationError(RuntimeError):
+    """The model replied, but no usable per-item costs could be read from it."""
+
+
+# ── Prompt (same for all providers) ──────────────────────────────────────────
 
 _SYSTEM_PROMPT = """
 You are an automotive repair cost estimation expert with deep knowledge of
@@ -85,23 +97,45 @@ def _coerce_cost(value) -> int:
 
 def _parse_response(raw: str, damages: list) -> dict:
     """
-    Strips markdown fences, parses JSON, and attaches a cost to each input
-    damage by index. Missing/invalid entries default to 0.
+    Extracts the JSON estimate and attaches a cost to each input damage by
+    index. Missing/invalid individual entries default to 0.
+
+    Raises:
+        CostEstimationError: if not a single per-item cost could be read, which
+            means the reply was unusable. Returning all-zero costs here would
+            surface a $0 claim that looks legitimate.
     """
-    raw = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw, flags=re.MULTILINE).strip()
-    try:
-        result = json.loads(raw)
-    except json.JSONDecodeError:
-        result = {}
+    result = extract_json_object(raw, required_key="items")
 
     # Map index -> cost from the model's response.
     cost_by_index = {}
-    for entry in result.get("items", []) or []:
+    for position, entry in enumerate(result.get("items", []) or []):
         if not isinstance(entry, dict):
             continue
         idx = entry.get("index")
-        if isinstance(idx, int):
-            cost_by_index[idx] = _coerce_cost(entry.get("cost"))
+        if isinstance(idx, bool):          # bool is an int subclass — reject it
+            continue
+        if not isinstance(idx, int):
+            # Some open-weight models emit "index": "0", or omit it entirely.
+            # Fall back to the entry's position in the list.
+            try:
+                idx = int(str(idx).strip())
+            except (TypeError, ValueError):
+                idx = position
+        cost_by_index[idx] = _coerce_cost(entry.get("cost"))
+
+    if damages and not cost_by_index:
+        snippet = " ".join(raw.split())[:300] or "<empty response>"
+        raise CostEstimationError(
+            f"No per-item costs found in the model reply. Raw reply: {snippet}"
+        )
+
+    missing = [i for i in range(len(damages)) if i not in cost_by_index]
+    if missing:
+        logger.warning(
+            "Cost estimator returned no cost for item index(es) %s; defaulting to $0.",
+            missing,
+        )
 
     items = []
     total = 0
@@ -161,26 +195,100 @@ async def _estimate_via_bedrock(car_color: str, car_model: str, damages: list) -
     return _parse_response(raw, damages)
 
 
-# ── OpenAI (GPT-4o) ───────────────────────────────────────────────────────────
+# ── OpenAI-compatible chat completions (OpenAI, Fireworks) ───────────────────
 
-async def _estimate_via_openai(car_color: str, car_model: str, damages: list) -> dict:
+async def _estimate_via_openai_compatible(
+    car_color: str,
+    car_model: str,
+    damages: list,
+    *,
+    api_key: str,
+    model: str,
+    base_url: str | None = None,
+    max_tokens: int = 500,
+    json_mode: bool = False,
+    extra_body: dict | None = None,
+) -> dict:
+    """Single implementation for any provider speaking the OpenAI chat API."""
     from openai import AsyncOpenAI
 
-    if not settings.openai_api_key:
-        raise ValueError("OPENAI_API_KEY is not set.")
+    client = AsyncOpenAI(api_key=api_key, base_url=base_url)
 
-    client = AsyncOpenAI(api_key=settings.openai_api_key)
-    response = await client.chat.completions.create(
-        model=settings.openai_cost_model,
-        messages=[
+    kwargs = {
+        "model": model,
+        "messages": [
             {"role": "system", "content": _SYSTEM_PROMPT},
             {"role": "user", "content": _build_user_message(car_color, car_model, damages)},
         ],
-        max_tokens=500,
-        temperature=0.2,
-    )
-    raw = response.choices[0].message.content.strip()
+        "max_tokens": max_tokens,
+        "temperature": 0.2,
+    }
+    if json_mode:
+        kwargs["response_format"] = {"type": "json_object"}
+    if extra_body:
+        kwargs["extra_body"] = extra_body
+
+    response = await client.chat.completions.create(**kwargs)
+
+    finish_reason = getattr(response.choices[0], "finish_reason", None)
+    raw = message_text(response)
+    if not raw:
+        raise CostEstimationError(
+            f"{model} returned an empty reply (finish_reason={finish_reason}). "
+            "If this is a reasoning model, raise its max-tokens budget."
+        )
+    if finish_reason == "length":
+        # The reply was cut off mid-JSON; parsing it would silently lose items.
+        logger.warning(
+            "%s hit the token limit (max_tokens=%s) — the estimate may be truncated.",
+            model, max_tokens,
+        )
     return _parse_response(raw, damages)
+
+
+# ── OpenAI (GPT-4o) ───────────────────────────────────────────────────────────
+
+async def _estimate_via_openai(car_color: str, car_model: str, damages: list) -> dict:
+    if not settings.openai_api_key:
+        raise ValueError("OPENAI_API_KEY is not set.")
+
+    return await _estimate_via_openai_compatible(
+        car_color, car_model, damages,
+        api_key=settings.openai_api_key,
+        model=settings.openai_cost_model,
+    )
+
+
+# ── Fireworks AI (GPT-OSS) ────────────────────────────────────────────────────
+
+async def _estimate_via_fireworks(car_color: str, car_model: str, damages: list) -> dict:
+    """
+    Calls an open-weight model (default: GPT-OSS 120B) on Fireworks AI.
+
+    Fireworks serves an OpenAI-compatible endpoint, so this reuses the same
+    client with a different base_url — no extra dependency. Two differences
+    from the GPT-4o path matter:
+      * GPT-OSS reasons before answering, so it needs a much larger token
+        budget and accepts a `reasoning_effort` hint.
+      * JSON mode constrains decoding to valid JSON, which an open-weight
+        model needs more than GPT-4o does.
+    """
+    if not settings.fireworks_api_key:
+        raise ValueError("FIREWORKS_API_KEY is not set.")
+
+    extra_body = {}
+    if settings.fireworks_reasoning_effort != "none":
+        extra_body["reasoning_effort"] = settings.fireworks_reasoning_effort
+
+    return await _estimate_via_openai_compatible(
+        car_color, car_model, damages,
+        api_key=settings.fireworks_api_key,
+        base_url=settings.fireworks_base_url,
+        model=settings.fireworks_cost_model,
+        max_tokens=settings.fireworks_cost_max_tokens,
+        json_mode=settings.fireworks_json_mode,
+        extra_body=extra_body or None,
+    )
 
 
 # ── Public interface ──────────────────────────────────────────────────────────
@@ -196,10 +304,24 @@ async def estimate_cost(car_color: str, car_model: str, damages: list) -> dict:
 
     Returns:
         {"items": [{type, severity, location, cost:int}], "total": int, "notes": str}
+
+    Raises:
+        ValueError: provider unknown, or its credentials are missing.
+        CostEstimationError: the model replied with nothing usable.
     """
     if not damages:
         return _empty_result()
 
-    if settings.llm_provider == "bedrock":
-        return await _estimate_via_bedrock(car_color, car_model, damages)
-    return await _estimate_via_openai(car_color, car_model, damages)
+    provider = settings.effective_cost_provider
+    handlers = {
+        "bedrock": _estimate_via_bedrock,
+        "openai": _estimate_via_openai,
+        "fireworks": _estimate_via_fireworks,
+    }
+    handler = handlers.get(provider)
+    if handler is None:
+        raise ValueError(
+            f"Unknown cost provider {provider!r}. "
+            f"Expected one of: {', '.join(sorted(handlers))}."
+        )
+    return await handler(car_color, car_model, damages)
