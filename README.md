@@ -25,7 +25,7 @@ No sign-up required. Any photo of a damaged car works, or grab one of the
 > don't upload anything sensitive. Each upload makes real `gpt-4o` calls.
 > See [Gaps and risks](docs/DEPLOYMENT.md#gaps-and-risks).
 
-![ClaimLens architecture](docs/claimlens_flow_ai.png)
+![ClaimLens architecture](docs/claimlens_flow_taskID_2stepflow.svg)
 
 ---
 

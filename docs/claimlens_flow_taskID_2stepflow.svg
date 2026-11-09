@@ -1,0 +1,314 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1536" height="1024" viewBox="0 0 1536 1024" font-family="Chalkboard SE, Comic Sans MS, sans-serif">
+  <defs>
+    <marker id="ah" markerWidth="14" markerHeight="14" refX="11" refY="7" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M1 1 L12 7 L1 13 Z" fill="#2a2a66"/>
+    </marker>
+    <marker id="ahs" markerWidth="14" markerHeight="14" refX="3" refY="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+      <path d="M1 1 L12 7 L1 13 Z" fill="#2a2a66"/>
+    </marker>
+    <marker id="ahp" markerWidth="14" markerHeight="14" refX="11" refY="7" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M1 1 L12 7 L1 13 Z" fill="#6a4fa8"/>
+    </marker>
+
+    <!-- brain + circuit icon -->
+    <symbol id="brain" viewBox="0 0 100 100">
+      <g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M57 16 C37 11 20 22 22 38 C10 45 11 61 23 67 C26 81 43 88 57 81"/>
+        <path d="M57 16 L57 81"/>
+        <path d="M30 24 C36 28 38 33 37 39"/>
+        <path d="M24 56 C31 55 36 58 39 63"/>
+        <circle cx="38" cy="43" r="2.6" fill="currentColor" stroke="none"/>
+        <circle cx="50" cy="43" r="2.6" fill="currentColor" stroke="none"/>
+        <path d="M37 57 C41 63 48 63 52 57"/>
+        <path d="M57 30 L72 30 M57 48 L80 48 M57 66 L72 66 M72 30 L72 66"/>
+        <circle cx="80" cy="26" r="4.6"/>
+        <circle cx="87" cy="48" r="4.6"/>
+        <circle cx="80" cy="70" r="4.6"/>
+        <path d="M76 29 L72 30 M76 67 L72 66"/>
+      </g>
+    </symbol>
+
+    <!-- server + gear icon -->
+    <symbol id="server" viewBox="0 0 100 100">
+      <g fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="6" y="10" width="72" height="26" rx="7"/>
+        <circle cx="22" cy="23" r="5"/>
+        <rect x="6" y="42" width="72" height="26" rx="7"/>
+        <circle cx="22" cy="55" r="5"/>
+        <circle cx="68" cy="76" r="15"/>
+        <circle cx="68" cy="76" r="6"/>
+        <path d="M68 55 L68 61 M68 91 L68 97 M47 76 L53 76 M83 76 L89 76
+                 M53.2 61.2 L57.5 65.5 M78.5 86.5 L82.8 90.8
+                 M82.8 61.2 L78.5 65.5 M57.5 86.5 L53.2 90.8"/>
+      </g>
+    </symbol>
+
+    <!-- eye icon for the vision step -->
+    <symbol id="eye" viewBox="0 0 100 100">
+      <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 50 C22 24 78 24 94 50 C78 76 22 76 6 50 Z"/>
+        <circle cx="50" cy="50" r="15"/>
+      </g>
+    </symbol>
+
+    <!-- calculator icon for the cost step -->
+    <symbol id="calc" viewBox="0 0 100 100">
+      <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="18" y="8" width="64" height="84" rx="9"/>
+        <rect x="30" y="20" width="40" height="18" rx="4"/>
+        <circle cx="34" cy="55" r="4"/><circle cx="50" cy="55" r="4"/><circle cx="66" cy="55" r="4"/>
+        <circle cx="34" cy="74" r="4"/><circle cx="50" cy="74" r="4"/><circle cx="66" cy="74" r="4"/>
+      </g>
+    </symbol>
+
+    <!-- flag icon for the review step -->
+    <symbol id="flag" viewBox="0 0 100 100">
+      <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M26 92 L26 10"/>
+        <path d="M26 16 C44 6 60 26 78 16 L78 54 C60 64 44 44 26 54 Z"/>
+      </g>
+    </symbol>
+  </defs>
+
+  <rect width="1536" height="1024" fill="#ffffff"/>
+
+  <!-- ======================= TITLE ======================= -->
+  <rect x="400" y="24" width="740" height="76" rx="38" fill="#f4f0fd" stroke="#8b7cc8" stroke-width="3"/>
+  <text x="770" y="77" font-size="40" fill="#1a1a1a" text-anchor="middle">ClaimLens — Claim Analysis Flow</text>
+  <text x="770" y="128" font-size="21" fill="#5a5a66" text-anchor="middle" font-style="italic">Two-stage LLM pipeline — fixed sequence, run in-process. Not a multi-agent system.</text>
+
+  <!-- ======================= OPTIONAL AGENTEX BRANCH ======================= -->
+  <rect x="384" y="156" width="352" height="214" rx="18" fill="#f7f3fd" stroke="#7b5cb8" stroke-width="2.6" stroke-dasharray="9 7"/>
+  <text x="402" y="188" font-size="21" fill="#6a4fa8">Optional — Agentex</text>
+  <text x="402" y="211" font-size="14" fill="#6a4fa8">ANALYSIS_MODE=agents · off by default</text>
+  <rect x="402" y="224" width="286" height="66" rx="14" fill="#ece4f7" stroke="#7b5cb8" stroke-width="2.6"/>
+  <text x="545" y="252" font-size="19" fill="#1a1a1a" text-anchor="middle">claim-analyzer</text>
+  <text x="545" y="275" font-size="14" fill="#44445a" text-anchor="middle">single external agent · JSON-RPC</text>
+  <text x="402" y="314" font-size="14" fill="#44445a">task/create → message/send "Analyze claim {id}"</text>
+  <text x="402" y="334" font-size="14" fill="#44445a">reply is prose, appended to claim.notes</text>
+  <text x="402" y="356" font-size="13" fill="#7a7a88" font-style="italic">best-effort: on failure the inline result stands</text>
+  <path d="M560 374 L572 408" fill="none" stroke="#6a4fa8" stroke-width="2.6" stroke-dasharray="8 6" marker-end="url(#ahp)"/>
+
+  <!-- ======================= BO (POLICY HOLDER) — ON MOBILE ======================= -->
+  <text x="46" y="200" font-size="25" fill="#1a1a1a">Bo (Policy Holder)</text>
+
+  <g stroke="#2b2b2b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- ear -->
+    <path d="M82 282 C74 279 72 295 81 298" fill="#fce3cc"/>
+    <!-- face (three-quarter, facing right) -->
+    <path d="M80 280 C80 250 95 240 115 240 C139 240 153 256 152 282
+             C152 300 147 314 139 322 C132 329 123 332 115 331
+             C97 328 80 306 80 280 Z" fill="#fce3cc"/>
+    <!-- hair: short, tousled -->
+    <path d="M78 288 C70 246 88 220 116 219 C147 218 161 240 158 276
+             C154 264 150 254 145 246
+             C141 252 135 256 128 258
+             C125 251 123 244 123 237
+             C114 248 100 255 88 256
+             C87 266 83 280 78 288 Z" fill="#332f2d" stroke="#2b2b2b"/>
+    <path d="M96 234 C104 226 114 223 123 224 M126 226 C136 226 146 232 152 242
+             M88 246 C92 236 98 230 106 226" stroke="#5c5752" stroke-width="2" fill="none"/>
+    <!-- brows -->
+    <path d="M93 270 C98 263 106 262 110 266"/>
+    <path d="M124 265 C129 259 137 260 141 265"/>
+    <!-- eyes -->
+    <circle cx="102" cy="281" r="3.6" fill="#2b2b2b" stroke="none"/>
+    <circle cx="132" cy="280" r="3.6" fill="#2b2b2b" stroke="none"/>
+    <!-- nose -->
+    <path d="M141 288 C147 293 147 300 140 301"/>
+    <!-- mouth -->
+    <path d="M118 309 C124 316 133 315 138 307"/>
+    <!-- neck -->
+    <path d="M105 329 L105 340 M127 329 L127 338"/>
+    <!-- sweater: torso + raised right arm as one silhouette -->
+    <path id="bo-shirt"
+          d="M105 336 C84 339 68 347 60 364 C52 382 50 400 50 418
+             L176 418 C179 402 180 386 179 374
+             C189 364 199 348 201 330 L186 322
+             C183 340 175 355 165 360
+             C157 345 143 338 127 336
+             C120 347 112 347 105 336 Z" fill="#8dc78d"/>
+    <!-- crew neckline -->
+    <path d="M102 339 C110 350 124 350 131 337"/>
+    <!-- left arm indicated inside the sweater, resting on desk -->
+    <path d="M57 370 C49 391 56 405 73 407 L130 412"/>
+    <!-- resting hand -->
+    <path d="M131 403 C146 401 156 406 155 412 C154 418 142 421 130 419 Z" fill="#fce3cc"/>
+    <path d="M137 404 C140 408 141 414 139 419 M145 404 C148 408 149 413 147 418" stroke-width="2.2"/>
+  </g>
+
+  <clipPath id="bo-clip"><use href="#bo-shirt"/></clipPath>
+  <g clip-path="url(#bo-clip)" stroke="#5aa35a" stroke-width="2" opacity="0.35">
+    <path d="M60 352 L40 410 M78 350 L54 418 M96 352 L70 420 M160 380 L140 424 M176 384 L158 424"/>
+  </g>
+
+  <!-- mobile phone + gripping hand -->
+  <g transform="rotate(-11 203 276)">
+    <rect x="182" y="240" width="44" height="76" rx="10" fill="#4a4a58" stroke="#2b2b2b" stroke-width="3"/>
+    <rect x="188" y="250" width="32" height="54" rx="3" fill="#dbe9f9" stroke="#2b2b2b" stroke-width="2"/>
+    <line x1="198" y1="245" x2="210" y2="245" stroke="#cfd6e2" stroke-width="2.6" stroke-linecap="round"/>
+    <circle cx="204" cy="309" r="3.4" fill="none" stroke="#cfd6e2" stroke-width="2.2"/>
+    <g stroke="#3b6fb0" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M193 274 L197 267 L211 267 L215 274 L215 280 L193 280 Z" fill="#ffffff"/>
+      <circle cx="199" cy="281" r="2.6" fill="#ffffff"/>
+      <circle cx="209" cy="281" r="2.6" fill="#ffffff"/>
+    </g>
+  </g>
+  <g stroke="#2b2b2b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M180 306 C174 310 173 322 180 327 C188 332 199 330 203 324 L196 306 Z" fill="#fce3cc"/>
+    <path d="M181 311 C187 310 192 312 194 316 M180 320 C185 319 190 321 192 325" stroke-width="2.2" fill="none"/>
+  </g>
+  <line x1="36" y1="419" x2="250" y2="419" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- ======================= MINDY (CLAIM PROCESSOR) ======================= -->
+  <text x="32" y="580" font-size="25" fill="#1a1a1a">Mindy (Claim Processor)</text>
+
+  <g stroke="#2b2b2b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- long hair behind the face -->
+    <path d="M72 730 C62 702 60 660 76 636 C92 610 142 600 156 636
+             C168 664 164 704 157 732
+             C151 716 148 702 148 688
+             C148 662 140 646 128 640
+             C110 634 88 644 82 662
+             C78 676 78 694 78 704
+             C78 714 76 722 72 730 Z" fill="#332f2d" stroke="#2b2b2b"/>
+    <!-- face -->
+    <path d="M81 682 C81 652 95 642 114 642 C137 642 149 657 148 681
+             C148 699 143 712 135 719 C128 725 120 727 113 725
+             C96 721 81 702 81 682 Z" fill="#fce3cc"/>
+    <!-- bangs -->
+    <path d="M80 668 C79 640 96 626 116 626 C140 626 151 642 150 666
+             C145 654 139 645 131 640
+             C121 654 99 664 80 668 Z" fill="#332f2d" stroke="#2b2b2b"/>
+    <path d="M90 644 C98 634 108 630 118 631 M124 632 C134 634 142 641 147 650" stroke="#5c5752" stroke-width="2" fill="none"/>
+    <!-- brows -->
+    <path d="M94 670 C99 663 106 662 110 666"/>
+    <path d="M124 665 C129 660 136 661 140 665"/>
+    <!-- eyes -->
+    <circle cx="101" cy="680" r="3.6" fill="#2b2b2b" stroke="none"/>
+    <circle cx="131" cy="679" r="3.6" fill="#2b2b2b" stroke="none"/>
+    <!-- nose -->
+    <path d="M139 687 C145 692 145 698 138 699"/>
+    <!-- mouth -->
+    <path d="M117 706 C123 713 131 712 136 704"/>
+    <!-- neck -->
+    <path d="M104 723 L104 734 M126 723 L126 732"/>
+    <!-- torso -->
+    <path id="mindy-shirt"
+          d="M104 730 C83 733 67 741 59 757 C51 773 49 789 49 796
+             L180 796 C181 780 180 764 176 752
+             C170 738 148 732 126 730
+             C119 741 111 741 104 730 Z" fill="#b8a6dd"/>
+    <path d="M101 733 C109 744 123 744 130 731"/>
+    <path d="M58 760 C50 779 57 791 74 792 L128 790"/>
+  </g>
+
+  <clipPath id="mindy-clip"><use href="#mindy-shirt"/></clipPath>
+  <g clip-path="url(#mindy-clip)" stroke="#8d7bbd" stroke-width="2" opacity="0.35">
+    <path d="M60 742 L44 792 M78 740 L56 798 M96 742 L74 798 M160 758 L142 800 M176 762 L160 800"/>
+  </g>
+
+  <!-- laptop -->
+  <g stroke="#2b2b2b" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M110 790 C106 796 110 801 117 801 L228 802 L222 794 Z" fill="#d9dde3"/>
+    <path d="M152 731 L228 731 L222 797 L137 794 Z" fill="#c9ced6"/>
+    <circle cx="184" cy="766" r="7" fill="none" stroke="#8a909a" stroke-width="3"/>
+  </g>
+  <g stroke="#2b2b2b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M127 782 C142 780 152 785 151 791 C150 797 138 800 126 798 Z" fill="#fce3cc"/>
+    <path d="M133 783 C136 787 137 793 135 798 M141 783 C144 787 145 792 143 797" stroke-width="2.2" fill="none"/>
+    <path d="M172 785 C186 783 196 788 195 794 C194 800 182 802 170 800 Z" fill="#fce3cc"/>
+    <path d="M178 786 C181 790 182 795 180 800 M186 786 C189 790 190 794 188 799" stroke-width="2.2" fill="none"/>
+  </g>
+  <line x1="36" y1="797" x2="250" y2="797" stroke="#2b2b2b" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- ======================= CLAIMLENS API ======================= -->
+  <rect x="470" y="420" width="210" height="190" rx="24" fill="#dbe9f9" stroke="#3b6fb0" stroke-width="3.4"/>
+  <text x="575" y="460" font-size="24" fill="#1a1a1a" text-anchor="middle">ClaimLens API</text>
+  <text x="575" y="484" font-size="17" fill="#44445a" text-anchor="middle">FastAPI</text>
+  <g color="#3b6fb0"><use href="#server" x="535" y="498" width="82" height="82"/></g>
+
+  <!-- ======================= DATA STORES ======================= -->
+  <g stroke="#2f8f45" stroke-width="3.4" fill="#e4f3e6" stroke-linejoin="round">
+    <path d="M448 745 L448 858 A72 19 0 0 0 592 858 L592 745"/>
+    <ellipse cx="520" cy="745" rx="72" ry="19"/>
+  </g>
+  <text x="520" y="812" font-size="22" fill="#1a1a1a" text-anchor="middle">Claims</text>
+  <text x="520" y="840" font-size="17" fill="#44445a" text-anchor="middle">PostgreSQL 16</text>
+
+  <g stroke="#d98b1f" stroke-width="3.4" fill="#fdeccf" stroke-linejoin="round">
+    <path d="M598 745 L598 858 A64 19 0 0 0 726 858 L726 745"/>
+    <ellipse cx="662" cy="745" rx="64" ry="19"/>
+  </g>
+  <text x="662" y="812" font-size="22" fill="#1a1a1a" text-anchor="middle">Images</text>
+  <text x="662" y="840" font-size="16" fill="#44445a" text-anchor="middle">uploads/ · S3</text>
+
+  <!-- ======================= ANALYSIS PIPELINE ======================= -->
+  <rect x="740" y="298" width="420" height="586" rx="22" fill="#f2f6fb" stroke="#5d7fab" stroke-width="3" stroke-dasharray="11 9"/>
+  <text x="758" y="332" font-size="22" fill="#2d4a6b">Analysis pipeline — in-process</text>
+  <text x="758" y="356" font-size="15" fill="#4a6party"/>
+  <text x="758" y="356" font-size="15" fill="#4a6a8a">analyzer.analyze_image() · steps always run in this order</text>
+
+  <!-- step 1 -->
+  <rect x="762" y="374" width="376" height="140" rx="18" fill="#e3f3e5" stroke="#2f8f45" stroke-width="3.4"/>
+  <g color="#2f8f45"><use href="#eye" x="782" y="404" width="54" height="54"/></g>
+  <text x="852" y="414" font-size="23" fill="#1a1a1a">1 · Vision</text>
+  <text x="852" y="440" font-size="17" fill="#2f6b3f">identify_vehicle()</text>
+  <text x="782" y="474" font-size="16" fill="#1a1a1a">color · model · plate · damage list</text>
+  <text x="782" y="498" font-size="16" fill="#1a1a1a">+ damage_confidence</text>
+
+  <!-- step 2 -->
+  <rect x="762" y="548" width="376" height="140" rx="18" fill="#dcebf8" stroke="#2f6fb0" stroke-width="3.4"/>
+  <g color="#2f6fb0"><use href="#calc" x="784" y="576" width="50" height="50"/></g>
+  <text x="852" y="588" font-size="23" fill="#1a1a1a">2 · Cost estimate</text>
+  <text x="852" y="614" font-size="17" fill="#2a5a90">estimate_cost()</text>
+  <text x="782" y="648" font-size="16" fill="#1a1a1a">per-item repair cost in USD</text>
+  <text x="782" y="672" font-size="16" fill="#1a1a1a">+ claim total</text>
+
+  <!-- step 3 -->
+  <rect x="762" y="722" width="376" height="124" rx="18" fill="#fdeccf" stroke="#d98b1f" stroke-width="3.4"/>
+  <g color="#c47d16"><use href="#flag" x="784" y="748" width="50" height="50"/></g>
+  <text x="852" y="760" font-size="23" fill="#1a1a1a">3 · Review flag</text>
+  <text x="852" y="786" font-size="17" fill="#9a6410">plain threshold, no LLM</text>
+  <text x="782" y="820" font-size="16" fill="#1a1a1a">confidence &lt; 0.6 → needs_human_review</text>
+
+  <!-- sequential arrows -->
+  <g fill="none" stroke="#2a2a66" stroke-width="3.4" marker-end="url(#ah)">
+    <path d="M950 520 L950 540"/>
+    <path d="M950 694 L950 714"/>
+  </g>
+
+  <text x="758" y="872" font-size="15" fill="#4a6a8a">steps 1 &amp; 2 are also callable alone: POST /api/vision · POST /api/estimate</text>
+
+  <!-- ======================= LLM ======================= -->
+  <rect x="1226" y="414" width="252" height="210" rx="20" fill="#fbe3e7" stroke="#c0485f" stroke-width="3.4"/>
+  <g color="#c0485f"><use href="#brain" x="1328" y="430" width="48" height="48"/></g>
+  <text x="1352" y="512" font-size="26" fill="#1a1a1a" text-anchor="middle">OpenAI gpt-4o</text>
+  <text x="1352" y="542" font-size="17" fill="#44445a" text-anchor="middle">one vision call + one text call</text>
+  <text x="1352" y="568" font-size="15" fill="#7a5560" text-anchor="middle">prompt in · JSON out · no tools</text>
+  <text x="1352" y="594" font-size="14" fill="#7a7a88" text-anchor="middle">LLM_PROVIDER=openai</text>
+  <text x="1352" y="614" font-size="14" fill="#7a7a88" text-anchor="middle">alt: Bedrock Qwen3-VL / Qwen3-32B</text>
+
+  <!-- ======================= ARROWS ======================= -->
+  <g fill="none" stroke="#2a2a66" stroke-width="3" stroke-dasharray="10 8" marker-end="url(#ah)">
+    <!-- bo -> api -->
+    <path d="M244 410 L462 442"/>
+    <!-- mindy -> api -->
+    <path d="M244 646 L462 598"/>
+    <!-- api -> pipeline -->
+    <path d="M686 494 L734 470"/>
+  </g>
+
+  <!-- bidirectional: api <-> stores, steps <-> llm -->
+  <g fill="none" stroke="#2a2a66" stroke-width="3" stroke-dasharray="10 8" marker-end="url(#ah)" marker-start="url(#ahs)">
+    <path d="M508 618 L508 738"/>
+    <path d="M652 618 L660 738"/>
+    <path d="M1144 448 L1220 474"/>
+    <path d="M1144 614 L1220 566"/>
+  </g>
+
+  <!-- ======================= EDGE LABELS ======================= -->
+  <text x="252" y="398" font-size="19" fill="#1a1a1a">POST /api/analyze</text>
+  <text x="252" y="676" font-size="18" fill="#1a1a1a">GET /api/claims</text>
+  <text x="252" y="700" font-size="15" fill="#44445a">PATCH /review · POST /approve</text>
+</svg>
