@@ -40,6 +40,7 @@ No sign-up required. Any photo of a damaged car works, or grab one of the
 - [What's next](#whats-next)
 - [Evaluation](#evaluation)
 - [Model evaluation](#model-evaluation)
+- [Evaluation of damage detection and cost estimation](#evaluation-of-damage-detection-and-cost-estimation)
 
 ---
 
@@ -126,37 +127,14 @@ COST_LLM_PROVIDER=fireworks
 FIREWORKS_API_KEY=fw-...
 ```
 
-| Step | Model | Tokens | Latency |
-|---|---|---|---|
-| Vision / damage detection | `qwen3p8-max` | 8192 | ~30–50s |
-| Cost estimation | [`gpt-oss-120b`](https://fireworks.ai/models/fireworks/gpt-oss-120b) | 2048 | ~3s |
-
-Measured end-to-end on the [sample images](backend/tests/fixtures/images):
-`qwen3p8-max` identified a pearl-white Toyota and four damage line items
-(including a door-to-quarter-panel gap misalignment) at 0.9 confidence, which
-`gpt-oss-120b` priced at $1,300.
-
-Four things to know before switching:
-
-- **The vision model must be multimodal.** GPT-OSS is text-only — fine for
-  pricing, but pointing `FIREWORKS_VISION_MODEL` at it will fail. Verified
-  working vision models on serverless: `qwen3p8-max`, `qwen3p8-2p4t-a95b`, and
-  `kimi-k3`. `glm-5p3` and `nemotron-3-ultra-nvfp4` reject image input.
-- **Reasoning models need a large token budget.** `qwen3p8-max` spends its
-  budget thinking before it answers: at 2048 and 4096 it never reaches the JSON
-  and the vision step fails outright. 8192 works. `kimi-k3` manages on 4096.
-- **Open weights are slower.** The vision call takes ~30–50s against GPT-4o's
-  few seconds, which is slow for an interactive upload. `kimi-k3` returns in
-  ~6s and is the better choice if latency matters more than Qwen's extra detail.
-- **Fireworks caps base64 images at 10MB**, so oversized uploads are rejected
-  locally rather than failing remotely.
-
-`qwen3p8-flash-next-nvfp4` is **not** on serverless (404). Using it requires an
-on-demand GPU deployment, then referencing it as `<model-id>#<deployment-name>`.
-
-See [`backend/.env.example`](backend/.env.example) for every knob.
-
----
+- **Give reasoning models room.** They spend output tokens thinking before
+  answering, so the vision budget is 8192 for Qwen and 4096 for Kimi rather
+  than the 500 GPT-4o needs. The defaults in
+  [`.env.example`](backend/.env.example) are already set correctly.
+- **Expect higher vision latency.** ~6s on Kimi and ~30–50s on Qwen, against
+  GPT-4o's ~3s. Kimi is the better pick when latency matters.
+- **Keep images under 10MB base64.** Larger uploads are caught locally before
+  the request is sent.
 
 ## Architecture overview
 
@@ -360,27 +338,110 @@ script reads/writes are documented in
 
 ## Model evaluation
 
-GPT-4o and Qwen tie on damage detection (F1 0.716 vs 0.713), but Qwen is 13×
-slower and 5× dearer because it emits 23× more reasoning tokens. GPT-OSS prices
-claims 12× cheaper than GPT-4o, with agreement inside run-to-run noise. Best
-mix: GPT-4o vision + GPT-OSS cost.
+GPT-4o leads damage detection (F1 0.716) and is both fastest and cheapest; Kimi
+(0.705) and Qwen (0.713) match it on accuracy but cost 2–5× more. GPT-OSS prices
+claims 12× cheaper than GPT-4o. Best mix: GPT-4o vision + GPT-OSS cost.
 
-| Step | Model | Accuracy | Latency | Cost / 1k claims |
-|---|---|---|---|---|
-| Damage detection | OpenAI `gpt-4o` | **F1 0.716** | **2.9s** | $4.16 |
-| Damage detection | Fireworks `qwen3p8-max` | F1 0.713 | 37.1s | $20.34 |
-| Cost estimation | OpenAI `gpt-4o` | MAE $138 · MAPE 25.5% | **1.4s** | $1.44 |
-| Cost estimation | Fireworks `gpt-oss-120b` | MAE $147 · MAPE 29.4% | 2.0s | **$0.12** |
-| Cost estimation | Fireworks `qwen3p8-max` | MAE $125 · MAPE 21.4% | 2.5s | $2.56 |
+### Damage detection — latency, tokens, cost
 
-<sub>Measured 2026-11-09 over 125 live API calls (50 vision, 75 cost), 0
-failures. **Damage
-detection** accuracy is micro-F1 against CarDD human labels (25 images);
-**cost estimation** accuracy is agreement with the committed Claude reference
-(52 items) — CarDD has no repair-price labels, so it is not accuracy against
-real prices. Cost is computed from each response's `usage` object at list rates
-(`gpt-4o` $2.50/$10.00, `qwen3p8-max` $2.00/$6.00, `gpt-oss-120b` $0.15/$0.60
-per 1M in/out). Fireworks models ran at `reasoning_effort=low`. The cost-step
-differences are **within run-to-run noise**: a second `gpt-4o` run on identical
-inputs scored MAE $123 / MAPE 22.8%, so treat the three as tied on cost
-accuracy.</sub>
+Three models serve this step. All figures are per call, averaged over 25 images.
+
+| Model | Latency mean | Median | Min | Max | Tokens in | Tokens out | $ / call | $ / 1k claims |
+|---|---|---|---|---|---|---|---|---|
+| OpenAI `gpt-4o` | **2.9s** | **3.0s** | **2.1s** | **3.7s** | 1,143 | **130** | **$0.0042** | **$4.16** |
+| Fireworks `kimi-k3` | 5.9s | 4.8s | 3.3s | 16.3s | 1,416 | 266 | $0.0082 | $8.24 |
+| Fireworks `qwen3p8-max` | 37.1s | 30.2s | 6.6s | 102.9s | 1,072 | 3,033 | $0.0203 | $20.34 |
+
+### Cost estimation — latency, tokens, cost
+
+Four models serve this step. All figures are per call, averaged over 25 claims.
+
+| Model | Latency mean | Median | Tokens in | Tokens out | $ / call | $ / 1k claims |
+|---|---|---|---|---|---|---|
+| OpenAI `gpt-4o` | **1.4s** | **1.3s** | 253 | **81** | $0.00144 | $1.44 |
+| Fireworks `gpt-oss-120b` | 2.0s | 2.0s | 327 | 115 | **$0.00012** | **$0.12** |
+| Fireworks `qwen3p8-max` | 2.5s | 2.2s | 301 | 326 | $0.00256 | $2.56 |
+| Fireworks `kimi-k3` | 3.0s | 2.8s | 390 | 102 | $0.00269 | $2.69 |
+
+### End-to-end, per claim
+
+| Configuration | Latency | $ / claim | $ / 1k claims |
+|---|---|---|---|
+| `gpt-4o` vision + `gpt-oss-120b` cost | 5.0s | **$0.0043** | **$4.27** |
+| All `gpt-4o` | **4.3s** | $0.0056 | $5.60 |
+| `kimi-k3` vision + `gpt-oss-120b` cost | 8.0s | $0.0084 | $8.36 |
+| All `kimi-k3` | 8.9s | $0.0109 | $10.93 |
+| `qwen3p8-max` vision + `gpt-oss-120b` cost | 39.1s | $0.0205 | $20.46 |
+| All `qwen3p8-max` | 39.5s | $0.0229 | $22.90 |
+
+Latency tracks output tokens, not model size: `qwen3p8-max` emits 23× more
+tokens than `gpt-4o` for the same appraisal, nearly all of it discarded
+reasoning, which is why it is simultaneously the slowest and the dearest. Among
+open weights, `kimi-k3` is the better vision choice — 6× faster and 2.5×
+cheaper than Qwen at the same accuracy.
+
+---
+
+## Evaluation of damage detection and cost estimation
+
+### Damage detection — vs CarDD human labels
+
+Multi-label damage-category detection over 25 CarDD images.
+
+| Model | Precision | Recall | F1 | Exact set match | Any-damage rate | TP | FP | FN |
+|---|---|---|---|---|---|---|---|---|
+| OpenAI `gpt-4o` | **0.806** | 0.644 | **0.716** | **40%** | 100% | 29 | **7** | 16 |
+| Fireworks `qwen3p8-max` | 0.738 | **0.689** | 0.713 | 32% | 100% | **31** | 11 | **14** |
+| Fireworks `kimi-k3` | 0.721 | **0.689** | 0.705 | 20% | 100% | **31** | 12 | **14** |
+
+All three find damage in 100% of images; they differ on naming the right
+categories. GPT-4o is the most precise (7 false positives) and gets the complete
+category set exactly right twice as often as Kimi. Both open models trade
+precision for recall, catching two more true positives at the cost of more false
+ones.
+
+### Cost estimation — vs Claude reference
+
+Per-item repair cost over 52 damage items from the same 25 claims.
+
+| Model | MAE | MAPE | Median APE | Pearson r | Within 10% | Within 25% | Signed bias | Mean estimate |
+|---|---|---|---|---|---|---|---|---|
+| OpenAI `gpt-4o` | $138 | 25.5% | 28.6% | 0.888 | 17% | 48% | −$84 | $459 |
+| Fireworks `gpt-oss-120b` | $147 | 29.4% | 33.3% | 0.851 | 15% | 40% | −$87 | $456 |
+| Fireworks `qwen3p8-max` | **$125** | 21.4% | 17.1% | 0.864 | 31% | **63%** | **+$34** | $576 |
+| Fireworks `kimi-k3` | $136 | **20.9%** | **15.4%** | **0.937** | **42%** | **63%** | +$123 | $666 |
+
+Claim-level agreement, aggregating the line items into a single total per claim:
+
+| Model | Claim-total MAE | Claim-total MAPE | Grand total (25 claims) |
+|---|---|---|---|
+| _Claude reference_ | — | — | _$28,210_ |
+| OpenAI `gpt-4o` | $254 | 22.1% | $23,850 |
+| Fireworks `gpt-oss-120b` | $238 | **20.6%** | $23,700 |
+| Fireworks `qwen3p8-max` | **$201** | **20.3%** | $29,975 |
+| Fireworks `kimi-k3` | $276 | 22.2% | $34,620 |
+
+The reference averages $542 per item. GPT-4o and GPT-OSS both price about $85
+below it; Qwen sits closest overall, within $34. Kimi has the tightest typical
+error (15.4% median, 42% of items within 10%) and the strongest correlation at
+r = 0.937, but runs $123 high on average, so a few large misses lift its mean
+error and its grand total.
+
+**Read the cost table with caution: the differences are within run-to-run
+noise.** A second `gpt-4o` run on identical inputs scored MAE $123 / MAPE 22.8%
+against the $138 / 25.5% above — a swing as large as the spread between models.
+At 52 items and `temperature=0.2`, treat all four as tied on cost accuracy and
+choose on price and latency instead.
+
+<sub>**Methodology.** Measured 2026-11-09 over 177 live API calls (75 vision,
+102 cost) via the production code path and the repo's own scoring
+(`backend/eval/`). Damage-detection accuracy is micro-F1 against CarDD's
+human-labeled ground truth, so it is real accuracy. Cost accuracy is *agreement
+with a Claude benchmark run*, not correctness — CarDD carries no repair-price
+labels, so a model agreeing more with Claude is not thereby more right. Token
+counts come from each response's `usage` object, which is what providers bill.
+Dollar figures apply published list rates: `gpt-4o` $2.50/$10.00,
+`qwen3p8-max` $2.00/$6.00, `kimi-k3` $3.00/$15.00, `gpt-oss-120b` $0.15/$0.60
+per 1M input/output tokens. Fireworks models ran at `reasoning_effort=low`,
+with vision output budgets of 8192 tokens for Qwen and 4096 for Kimi. Prompt
+caching was not exercised and would reduce input cost.</sub>
